@@ -1,0 +1,12 @@
+# QORTEX · datos comerciales de Quamtex: nunca entran en git (Acta §8).
+qortex_data.json
+reporte_calidad.txt
+supuestos_proveedores.json
+# Salidas del motor v0 y exportaciones
+*.xlsx
+*.csv
+salidas/
+# Credenciales: solo el .env.example con referencias op:// se versiona
+.env
+.env.*
+!.env.example
