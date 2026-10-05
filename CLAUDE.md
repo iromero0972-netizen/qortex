@@ -10,6 +10,8 @@ Proveedor: KATIA.AI. Responsable: Ignacio Romero (CPA).
 1. `docs/PROJECT_STATE.md`: el estado vigente. Si el chat lo contradice, gana el archivo.
 2. `docs/superpowers/specs/2026-10-05-qortex-design.md`: el diseño.
 3. El plan activo en `docs/superpowers/plans/`, en su tabla «Estado de ejecución».
+4. `docs/ARQUITECTURA.md`: componentes, contrato de datos y fórmulas. **Hoy es propuesta**: no
+   rige hasta que Ignacio acepte el ADR-002.
 
 ## Reglas que no se negocian
 

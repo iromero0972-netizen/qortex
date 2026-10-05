@@ -41,3 +41,5 @@ fecha: 2026-10-05
 |---|---|---|
 | 2026-10-05 | Se abre el expediente en repositorio propio: acta, `.gitignore`, `.env.example` y ADR-001 | commit inicial |
 | 2026-10-05 | Kit de proyecto: CLAUDE.md, PROJECT_STATE, DECISION_LOG, índice de ADR, spec, plan Fase 0 y CI | segundo commit |
+| 2026-10-05 | Dashboard importado del artifact; decisión: IA solo con datos demo | `e623751`, `ba46970` |
+| 2026-10-05 | Revisión multiagente: 64 proyectos comprobados, 48 hallazgos; arquitectura propuesta | `docs/ARQUITECTURA.md`, `docs/REVISION-2026-10-05.md` |

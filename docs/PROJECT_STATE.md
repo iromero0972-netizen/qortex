@@ -31,7 +31,10 @@ Ver `CLAUDE.md` § «Reglas que no se negocian». La primera: **QORTEX no escrib
 |---|---|---|
 | Acta del proyecto | Vigente | `README.md` |
 | Spec de diseño | Propuesto, pendiente de revisión | `docs/superpowers/specs/` |
-| Plan Fase 0 | Propuesto, bloqueado en la tarea 1 | `docs/superpowers/plans/` |
+| Plan Fase 0 | Propuesto, bloqueado en la tarea 1. La revisión propone rehacerlo (T0–T10, ~70 h, supuesto) | `docs/superpowers/plans/` |
+| Arquitectura e ingeniería | **Propuesta**, pendiente de 10 decisiones de Ignacio y de los ADR-002 a ADR-005 | `docs/ARQUITECTURA.md` |
+| Referencias comprobadas (64 proyectos, 8 ángulos) | Vigente | `docs/REFERENCIAS.md` |
+| Revisión del 5-oct (48 hallazgos, cambios propuestos al spec y al plan) | Vigente | `docs/REVISION-2026-10-05.md` |
 | Dashboard v0.1 (6 pestañas + simulador) | Probado con datos demo. Aún sin `noindex` ni validación por esquema (plan, tarea 7) | `index.html`, importado del artifact el 5-oct |
 | Conector NetSuite (solo lectura, OAuth1 TBA) | Probado con respuestas simuladas | **fuera del repo**, falta subirlo |
 | 5 queries SuiteQL | Escritas | **fuera del repo**, en un transcript |
@@ -52,6 +55,6 @@ Ver `CLAUDE.md` § «Reglas que no se negocian». La primera: **QORTEX no escrib
 
 ## 5. Siguiente paso
 
-1. Cerrar B1 y B2 hoy.
-2. WhatsApp a Víctor (script en `SEGUIMIENTO.md`).
-3. Con B4: ejecutar el plan Fase 0 desde la tarea 2.
+1. Ignacio decide los 10 puntos de `docs/REVISION-2026-10-05.md` §5.
+2. Con esas decisiones: ADR-002 a ADR-005, y spec, plan y `CLAUDE.md` alineados en un solo commit.
+3. Cerrar B1 y B2; WhatsApp a Víctor (script en `SEGUIMIENTO.md`).
