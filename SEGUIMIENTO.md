@@ -46,3 +46,4 @@ fecha: 2026-10-05
 | 2026-10-05 | Dashboard importado del artifact; decisión: IA solo con datos demo | `e623751`, `ba46970` |
 | 2026-10-05 | Revisión multiagente: 64 proyectos comprobados, 48 hallazgos; arquitectura propuesta | `docs/ARQUITECTURA.md`, `docs/REVISION-2026-10-05.md` |
 | 2026-10-05 | Ignacio acepta las 10 decisiones; ADR-002 a ADR-005, spec v2 y plan v2 | este commit |
+| 2026-10-05 | Modelo de solución (12 láminas) para Víctor y Edgar; demo T0c lista; correo T0b redactado | artifact SjktebCCJghGsGvCLDKkQH, este commit |

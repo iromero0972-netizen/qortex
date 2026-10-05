@@ -39,6 +39,8 @@ Ver `CLAUDE.md` § «Reglas que no se negocian». La primera: **QORTEX no escrib
 | Conector NetSuite (solo lectura, OAuth1 TBA) | Probado con respuestas simuladas | **fuera del repo**, falta subirlo |
 | 5 queries SuiteQL | Escritas; el plan las amplía a 6 (T3) | **fuera del repo**, en un transcript |
 | Deck general (12 láminas) y deck Víctor (13) | Listos; faltan precios y placeholders | Artifacts de claude.ai |
+| **Modelo de solución** (12 láminas, para Víctor y Edgar) | Listo; faltan 2 fechas en la lámina 12 | https://claude.ai/artifact/SjktebCCJghGsGvCLDKkQH |
+| Demo publicable (T0c) | `demo/index.html` de un archivo, sin CDN de scripts, `noindex`; probada en Chromium | `demo/`, `scripts/construir_demo.py`, `scripts/publicar_demo.sh` |
 | Guion de 45 min + 5 objeciones + correo de seguimiento | Listo | Transcript |
 
 ## 4. Bloqueos

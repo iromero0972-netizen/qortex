@@ -37,8 +37,8 @@ reescribe desde cero lo que ya funciona.
 | Tarea | Horas | Depende de | Estado |
 |---|---|---|---|
 | T0 · Puerta comercial: precio, propuesta, reunión, cobro | — | — | pendiente (SEGUIMIENTO) |
-| T0b · Correo de arranque al admin y a Compras | 1,5 | — | pendiente · **antes del cobro** |
-| T0c · Demo publicada y protegida para la reunión | 1 | — | pendiente · **antes del cobro** |
+| T0b · Correo de arranque al admin y a Compras | 1,5 | — | redactado (`docs/comercial/T0b-correo-arranque.md`); se envía tras el «sí» de Víctor |
+| T0c · Demo publicada y protegida para la reunión | 1 | — | `demo/` lista y probada (Chart.js incrustado, noindex); falta `scripts/publicar_demo.sh` desde la terminal de Ignacio + contraseña |
 | T1 · Importar conector y queries tal cual | 1 | B1 | parcial: dashboard en `e623751` |
 | T1b · Andamiaje: `dashboard/`, src layout, Makefile, CI, guard | 4 | cobro | pendiente |
 | T1c · ADR-002 a 005 y documentos alineados | 3 | decisiones | **hecha** (este commit) |
