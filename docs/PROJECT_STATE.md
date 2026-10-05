@@ -32,7 +32,7 @@ Ver `CLAUDE.md` § «Reglas que no se negocian». La primera: **QORTEX no escrib
 | Acta del proyecto | Vigente | `README.md` |
 | Spec de diseño | Propuesto, pendiente de revisión | `docs/superpowers/specs/` |
 | Plan Fase 0 | Propuesto, bloqueado en la tarea 1 | `docs/superpowers/plans/` |
-| Dashboard v0.1 (6 pestañas + simulador) | Probado con datos demo | **fuera del repo**, falta subirlo |
+| Dashboard v0.1 (6 pestañas + simulador) | Probado con datos demo. Aún sin `noindex` ni validación por esquema (plan, tarea 7) | `index.html`, importado del artifact el 5-oct |
 | Conector NetSuite (solo lectura, OAuth1 TBA) | Probado con respuestas simuladas | **fuera del repo**, falta subirlo |
 | 5 queries SuiteQL | Escritas | **fuera del repo**, en un transcript |
 | Deck general (12 láminas) y deck Víctor (13) | Listos; faltan precios y placeholders | Artifacts de claude.ai |
@@ -42,7 +42,7 @@ Ver `CLAUDE.md` § «Reglas que no se negocian». La primera: **QORTEX no escrib
 
 | # | Qué | De quién | Desbloquea |
 |---|---|---|---|
-| B1 | Subir dashboard, conector y queries al repo | Ignacio | Plan Fase 0, tarea 1 |
+| B1 | Subir conector y queries al repo (el dashboard ya está) | Ignacio | Plan Fase 0, tarea 1 |
 | B2 | Precios confirmados (Fase 0, Fase 1, retainer) | Ignacio | Decks y propuesta |
 | B3 | Reunión a solas con Víctor | Víctor | Todo lo comercial |
 | B4 | Rol NetSuite exclusivo de solo lectura + 6 credenciales en 1Password | Víctor / admin NetSuite | Primera corrida real |

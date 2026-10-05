@@ -1,0 +1,894 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QORTEX · Centro de abastecimiento Quamtex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#F2F5F9;--surface:#FFFFFF;--surface2:#E9EFF6;--line:#D3DCE8;--text:#13213A;--muted:#55657D;
+  --accent:#0E86AE;--accent-soft:#D6EEF6;--warn:#B86200;--crit:#C8322E;--ok:#1E8358;--gray:#6B7891;--excess:#6D4FD6;
+  --shadow:0 1px 2px rgba(19,33,58,.08);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1726;--surface:#152235;--surface2:#1C2C44;--line:#2A3E5C;--text:#E6ECF5;--muted:#9AA9C0;
+  --accent:#38C3EA;--accent-soft:#163C52;--warn:#F5A23A;--crit:#F26560;--ok:#4CC293;--gray:#8794AA;--excess:#A992F5;--shadow:none}}
+:root[data-theme="dark"]{
+  --bg:#0E1726;--surface:#152235;--surface2:#1C2C44;--line:#2A3E5C;--text:#E6ECF5;--muted:#9AA9C0;
+  --accent:#38C3EA;--accent-soft:#163C52;--warn:#F5A23A;--crit:#F26560;--ok:#4CC293;--gray:#8794AA;--excess:#A992F5;--shadow:none}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;font-variant-numeric:tabular-nums}
+h1,h2,h3{font-family:Archivo,"Arial Narrow",system-ui,sans-serif;font-stretch:88%;margin:0;line-height:1.15}
+h2{font-size:22px;font-weight:700}h3{font-size:16px;font-weight:700}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1320px;margin:0 auto;padding:0 20px 60px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.bar{max-width:1320px;margin:0 auto;padding:14px 20px 0;display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
+.brand{display:flex;align-items:baseline;gap:12px}
+.brand h1{font-size:28px;font-weight:800;font-stretch:110%;letter-spacing:.5px}
+.brand span{color:var(--muted);font-size:14px}
+.demo{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--muted)}
+.pill.live{color:var(--ok);border-color:var(--ok)}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 14px;font-weight:500}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .btn.primary{color:#0E1726}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.primary{color:#0E1726}}
+nav.tabs{max-width:1320px;margin:0 auto;padding:0 20px;display:flex;gap:4px;overflow-x:auto}
+nav.tabs button{border:0;background:none;padding:12px 14px;color:var(--muted);font-weight:600;border-bottom:3px solid transparent;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--text);border-bottom-color:var(--accent)}
+section.pane{display:none;padding-top:24px}section.pane.on{display:block}
+.lead{color:var(--muted);max-width:760px;margin:6px 0 20px}
+.grid{display:grid;gap:16px}
+.g6{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow);min-width:0}
+.card h3{margin-bottom:10px}
+.gauge{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px}
+.gauge svg{width:100%;max-width:170px;height:auto}
+.gauge .v{font-family:Archivo,sans-serif;font-size:24px;font-weight:800;margin-top:-30px}
+.gauge .l{font-size:13px;color:var(--muted);line-height:1.3}
+.gauge .n{font-size:12px;color:var(--muted)}
+.chartbox{position:relative;height:300px}
+.chartbox.sm{height:220px}
+.callout{border-left:4px solid var(--warn);background:var(--surface2);padding:12px 14px;border-radius:0 10px 10px 0;font-size:14px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:12.5px;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr.click{cursor:pointer}tr.click:hover td{background:var(--surface2)}
+td.num,th.num{text-align:right;white-space:nowrap}
+.st{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13px;white-space:nowrap}
+.st::before{content:"";width:10px;height:10px;border-radius:50%;background:currentColor}
+.st.critico{color:var(--crit)}.st.ordenar{color:var(--warn)}.st.ok{color:var(--ok)}.st.exceso{color:var(--excess)}.st.sin-venta{color:var(--gray)}
+.tag{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 7px;border-radius:5px;background:var(--surface2);color:var(--muted)}
+.tag.crit{background:var(--accent-soft);color:var(--accent)}
+/* regla de cobertura: días de stock vs. tiempo de llegada del proveedor */
+.ruler{position:relative;height:16px;min-width:170px;background:var(--surface2);border-radius:4px}
+.ruler .fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+.ruler .lt{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--text)}
+.ruler .lab{position:absolute;right:6px;top:-1px;font-size:11px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--text);color:var(--bg);border-color:var(--text)}
+.search{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 10px;min-width:200px}
+.attn{display:flex;flex-direction:column;gap:10px}
+.attn .it{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:12px;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:var(--surface)}
+.attn .it:hover{background:var(--surface2)}
+.attn .it small{color:var(--muted);grid-column:1/-1}
+.prov{display:flex;flex-direction:column;gap:12px}
+.provhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.kv div{background:var(--surface2);border-radius:8px;padding:8px 10px}
+.kv b{display:block;font-family:Archivo,sans-serif;font-size:18px}
+.kv span{font-size:12px;color:var(--muted)}
+.cont{height:12px;background:var(--surface2);border-radius:6px;overflow:hidden}
+.cont i{display:block;height:100%;background:var(--accent)}
+details.why summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:13px}
+.reasons{margin:8px 0 0;padding-left:18px;font-size:13.5px;max-width:780px}
+.reasons li{margin-bottom:5px}
+.sim{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.sim label{display:flex;flex-direction:column;gap:6px;font-weight:500}
+.sim output{font-family:Archivo,sans-serif;font-weight:700;color:var(--accent)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.delta{font-size:13px;color:var(--muted)}
+.delta b.up{color:var(--crit)}.delta b.down{color:var(--ok)}
+input.cell{width:80px;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:4px 6px;text-align:right}
+.drawer{position:fixed;inset:0;z-index:50;display:none}
+.drawer.on{display:block}
+.drawer .scrim{position:absolute;inset:0;background:rgba(8,14,24,.55)}
+.drawer .panel{position:absolute;top:0;right:0;bottom:0;width:min(760px,100%);background:var(--bg);overflow-y:auto;
+  padding:calc(20px + env(safe-area-inset-top,0px)) 22px calc(30px + env(safe-area-inset-bottom,0px));border-left:1px solid var(--line)}
+.panel .x{float:right}
+.ai{background:var(--surface2);border-radius:10px;padding:14px;white-space:pre-wrap;font-size:14px;min-height:20px}
+.ai:empty{display:none}
+.ask{display:flex;gap:8px;flex-wrap:wrap}
+.ask input{flex:1;min-width:220px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px}
+.hide{display:none!important}
+.foot{color:var(--muted);font-size:12.5px;margin-top:30px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="bar">
+    <div class="brand"><h1>QORTEX</h1><span>Centro de abastecimiento · Quamtex</span></div>
+    <div class="demo">
+      <span class="pill" id="fuente">Datos de demostración</span>
+      <label class="btn" for="carga">Cargar datos de NetSuite</label>
+      <input type="file" id="carga" accept=".json,application/json" class="hide">
+    </div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-t="panorama" aria-selected="true">Panorama</button>
+    <button role="tab" data-t="inventario">Inventario</button>
+    <button role="tab" data-t="recompra">Recompra sugerida</button>
+    <button role="tab" data-t="proyeccion">Proyección</button>
+    <button role="tab" data-t="clientes">Clientes</button>
+    <button role="tab" data-t="simulador">Simulador “¿y si…?”</button>
+  </nav>
+</header>
+
+<main class="wrap">
+<!-- PANORAMA -->
+<section class="pane on" id="panorama">
+  <p class="lead" id="resumenTxt"></p>
+  <div class="grid g6" id="gaugesInt"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card">
+      <h3>Lo que necesita su atención hoy</h3>
+      <div class="attn" id="atencion"></div>
+    </div>
+    <div class="card">
+      <h3>Inversión sugerida por proveedor, costo puesto en almacén</h3>
+      <div class="chartbox"><canvas id="chProv"></canvas></div>
+      <div class="callout" style="margin-top:12px">Conteo físico KATIA: diferencia neta de −961 unidades en 36 SKUs contra el sistema. Antes de comprar, QORTEX recomienda ajustar esos SKUs en NetSuite.</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px" id="askCard">
+    <h3>Pregúntele a QORTEX</h3>
+    <p class="lead" style="margin:0 0 10px">Responde con los datos de esta pantalla. Ejemplo: “¿Qué compro esta semana si solo tengo $40,000?”</p>
+    <div class="ask"><input id="askQ" placeholder="Escriba su pregunta" aria-label="Pregunta para QORTEX"><button class="btn primary" id="askBtn">Preguntar</button><button class="btn hide" id="askStop">Detener</button></div>
+    <div class="ai" id="askOut" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<!-- INVENTARIO -->
+<section class="pane" id="inventario">
+  <h2>Inventario y niveles</h2>
+  <p class="lead">La barra muestra cuántos días cubre el stock actual. La línea vertical marca cuánto tarda en llegar una compra nueva de ese proveedor: si la barra no la alcanza, el producto se agota antes de reponerse.</p>
+  <div class="chips" id="filtros"></div>
+  <div class="card tablewrap"><table id="tInv"></table></div>
+</section>
+
+<!-- RECOMPRA -->
+<section class="pane" id="recompra">
+  <h2>Recompra sugerida</h2>
+  <p class="lead">Órdenes de compra propuestas por proveedor, con costo puesto en almacén: producto, flete, seguro, arancel, agente aduanal, acarreo, costo de anticipos y costo de mantener inventario. Abra “¿Por qué?” en cada línea.</p>
+  <div class="grid g2">
+    <div class="card"><h3>De qué se compone el costo total</h3><div class="chartbox sm"><canvas id="chCosto"></canvas></div></div>
+    <div class="card"><h3>Salidas de caja por mes</h3><div class="chartbox sm"><canvas id="chCaja"></canvas></div></div>
+  </div>
+  <div class="prov" id="provList" style="margin-top:16px"></div>
+</section>
+
+<!-- PROYECCION -->
+<section class="pane" id="proyeccion">
+  <h2>Proyección de ventas e inventario</h2>
+  <div class="chips"><label for="selSku" class="tag">Producto</label><select id="selSku" class="search"></select></div>
+  <div class="grid g2">
+    <div class="card"><h3>Ventas mensuales: historial y pronóstico a 6 meses</h3><div class="chartbox"><canvas id="chDem"></canvas></div></div>
+    <div class="card"><h3>Nivel de inventario proyectado, 180 días</h3><div class="chartbox"><canvas id="chInvP"></canvas></div></div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h3>Ventas totales de Quamtex: historial y pronóstico</h3><div class="chartbox"><canvas id="chVentas"></canvas></div></div>
+    <div class="card"><h3>Inventario total proyectado (valor a costo)</h3><div class="chartbox"><canvas id="chInvTot"></canvas></div></div>
+  </div>
+</section>
+
+<!-- CLIENTES -->
+<section class="pane" id="clientes">
+  <h2>Clientes: recompra y crecimiento</h2>
+  <p class="lead">La demanda futura depende de quién vuelve a comprar y de cuántos clientes nuevos llegan. Estos medidores alimentan el pronóstico.</p>
+  <div class="grid g6" id="gaugesCli"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h3>Clientes nuevos por mes y proyección</h3><div class="chartbox"><canvas id="chNuevos"></canvas></div></div>
+    <div class="card"><h3>Ventas futuras: clientes actuales y nuevos</h3><div class="chartbox"><canvas id="chFut"></canvas></div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>Clientes que ya deberían haber vuelto a comprar</h3>
+    <div class="tablewrap"><table id="tCli"></table></div>
+  </div>
+</section>
+
+<!-- SIMULADOR -->
+<section class="pane" id="simulador">
+  <h2>Simulador “¿y si…?”</h2>
+  <p class="lead">Mueva un supuesto y todo el sistema se recalcula: niveles, compras sugeridas, costos y caja. Es el gemelo digital del almacén.</p>
+  <div class="card">
+    <div class="sim">
+      <label>Demanda vs. pronóstico <output id="oDem">0%</output><input type="range" id="sDem" min="-30" max="40" step="5" value="0"></label>
+      <label>Retraso extra desde China (semanas) <output id="oRet">0</output><input type="range" id="sRet" min="0" max="8" step="1" value="0"></label>
+      <label>Arancel adicional a China <output id="oAr">0%</output><input type="range" id="sAr" min="0" max="50" step="5" value="0"></label>
+      <label>Nivel de servicio extra <output id="oSv">+0 pts</output><input type="range" id="sSv" min="0" max="3" step="0.5" value="0"></label>
+      <label>Costo de capital anual <output id="oTasa">9%</output><input type="range" id="sTasa" min="4" max="18" step="1" value="9"></label>
+    </div>
+    <div class="kv" id="simKpi" style="margin-top:18px"></div>
+    <button class="btn" id="simReset" style="margin-top:14px">Volver al escenario base</button>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>Supuestos por proveedor</h3>
+    <p class="lead" style="margin:0 0 10px">Los tiempos se calculan del historial de órdenes y recepciones en NetSuite. Ajuste aquí lo que su equipo sepa mejor.</p>
+    <div class="tablewrap"><table id="tProv"></table></div>
+  </div>
+</section>
+
+<p class="foot" id="pie"></p>
+</main>
+
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="scrim" data-close></div>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+    <button class="btn x" data-close>Cerrar</button>
+    <div id="dBody"></div>
+  </div>
+</div>
+
+<script id="engine">
+/* ================= MOTOR QORTEX ================= */
+const HOY = new Date(2026, 9, 4);
+const DIA = 86400000;
+const avg = a => a.length ? a.reduce((s, v) => s + v, 0) / a.length : 0;
+const sum = a => a.reduce((s, v) => s + v, 0);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+// inversa normal (Acklam) para convertir nivel de servicio en factor Z
+function zInv(p){const a=[-39.6968302866538,220.946098424521,-275.928510446969,138.357751867269,-30.6647980661472,2.50662827745924],
+b=[-54.4760987982241,161.585836858041,-155.698979859887,66.8013118877197,-13.2806815528857],c=[-0.00778489400243029,-0.322396458041136,-2.40075827716184,-2.54973253934373,4.37466414146497,2.93816398269878],d=[0.00778469570904146,0.32246712907004,2.445134137143,3.75440866190742];
+const pl=0.02425;let q,r;if(p<pl){q=Math.sqrt(-2*Math.log(p));return(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
+if(p<=1-pl){q=p-0.5;r=q*q;return(((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1)}
+q=Math.sqrt(-2*Math.log(1-p));return-(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
+
+// Pronóstico Holt-Winters multiplicativo con tendencia amortiguada
+function pronostico(x, h = 6){
+  const n = x.length, L = 12, years = Math.floor(n / L);
+  let s = new Array(L).fill(1);
+  if (years >= 1){
+    s = new Array(L).fill(0);
+    for (let y = 0; y < years; y++){
+      const ini = n - (years - y) * L, seg = x.slice(ini, ini + L), m = avg(seg);
+      seg.forEach((v, i) => { s[(ini + i) % L] += (m > 0 ? v / m : 1) / years; });
+    }
+    s = s.map(v => clamp(1 + 0.7 * (v - 1), 0.35, 2.5));
+    const ms = avg(s); s = s.map(v => v / ms);
+  }
+  const y = x.map((v, t) => v / s[t % L]);
+  let Lv = avg(y.slice(0, Math.min(L, n))), Tr = n >= 2 * L ? (avg(y.slice(n - L)) - avg(y.slice(0, L))) / (n - L) : 0;
+  const al = 0.35, be = 0.1, phi = 0.9, err = [], fit = [];
+  for (let t = 0; t < n; t++){
+    const f = (Lv + phi * Tr) * s[t % L];
+    fit.push(f); if (t >= 6) err.push(x[t] - f);
+    const nL = al * y[t] + (1 - al) * (Lv + phi * Tr);
+    Tr = be * (nL - Lv) + (1 - be) * phi * Tr; Lv = nL;
+  }
+  const f = []; let damp = 0;
+  for (let k = 1; k <= h; k++){ damp += Math.pow(phi, k); f.push(Math.max(0, (Lv + damp * Tr) * s[(n + k - 1) % L])); }
+  const sigma = Math.sqrt(avg(err.map(e => e * e))) || 0;
+  return { f, sigma, s, fit, idxProx: avg(f.slice(0, 3)) / (avg(x.slice(-12)) || 1) };
+}
+
+/* ---------- Datos de demostración (se reemplazan por NetSuite) ---------- */
+function mesesHist(){const m=[];for(let i=23;i>=0;i--)m.push(new Date(HOY.getFullYear(),HOY.getMonth()-1-i,1));return m}
+const MESES = mesesHist();
+const MESES_FUT = Array.from({length:6},(_,k)=>new Date(HOY.getFullYear(),HOY.getMonth()+k,1));
+const etiquetaMes = d => d.toLocaleDateString('es-US',{month:'short',year:'2-digit'});
+
+function datosDemo(){
+  const R = rng(20261004);
+  const g = () => { let u=0,v=0; while(!u)u=R(); while(!v)v=R(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+  const proveedores = [
+    {id:'CN',nombre:'Proveedor Asia',origen:'China',lt:78,ltSd:14,fleteM3:95,seguro:0.005,arancel:0.25,brokerPO:450,acarreoM3:25,maritimo:true,revision:30,
+      pagos:[{pct:0.3,ref:'orden',dias:0},{pct:0.7,ref:'llegada',dias:-35}],terminos:'30% al ordenar, 70% al embarcar'},
+    {id:'BR',nombre:'Proveedor Brasil',origen:'Brasil',lt:60,ltSd:12,fleteM3:110,seguro:0.005,arancel:0.035,brokerPO:400,acarreoM3:25,maritimo:true,revision:30,
+      pagos:[{pct:0.5,ref:'orden',dias:0},{pct:0.5,ref:'llegada',dias:-30}],terminos:'50% al ordenar, 50% al embarcar'},
+    {id:'EU',nombre:'Proveedor Europa',origen:'Europa',lt:63,ltSd:9,fleteM3:120,seguro:0.005,arancel:0.035,brokerPO:400,acarreoM3:25,maritimo:true,revision:30,
+      pagos:[{pct:1,ref:'llegada',dias:15}],terminos:'Neto 60 desde embarque'},
+    {id:'MX',nombre:'Proveedor México',origen:'México',lt:21,ltSd:5,fleteM3:60,seguro:0.003,arancel:0,brokerPO:250,acarreoM3:0,maritimo:false,revision:14,
+      pagos:[{pct:1,ref:'llegada',dias:30}],terminos:'Neto 30 a la recepción'},
+    {id:'US',nombre:'Proveedor EE.UU.',origen:'EE.UU.',lt:10,ltSd:3,fleteM3:35,seguro:0,arancel:0,brokerPO:0,acarreoM3:0,maritimo:false,revision:7,
+      pagos:[{pct:1,ref:'llegada',dias:30}],terminos:'Neto 30 a la recepción'}
+  ];
+  // [sku, línea, descripción, proveedor, costo FOB, precio, demanda base/mes, m3 por unidad, múltiplo de compra, vida útil meses, estacionalidad, alterno]
+  const cat = [
+    ['RF-101','Refinishing','Primer 2K gris, galón','CN',17.5,38,420,0.0045,48,24,0.25,'US'],
+    ['RF-118','Refinishing','Clear coat alto sólido, galón','CN',22,52,360,0.0045,48,24,0.25,'US'],
+    ['RF-132','Refinishing','Base color negro, cuarto','CN',9.8,24,610,0.0012,96,24,0.2,null],
+    ['RF-140','Refinishing','Catalizador rápido, cuarto','EU',11.2,27,540,0.0012,96,12,0.2,'US'],
+    ['RF-155','Refinishing','Reductor medio, galón','MX',8.4,19,380,0.0045,40,24,0.2,null],
+    ['FP-210','Factory Packs','Esmalte industrial blanco, cubeta 5 gal','BR',58,118,140,0.022,24,18,0.3,'MX'],
+    ['FP-224','Factory Packs','Epóxico gris, kit','BR',74,149,95,0.024,12,12,0.3,null],
+    ['FP-236','Factory Packs','Anticorrosivo rojo óxido, cubeta','BR',49,99,120,0.022,24,18,0.35,'MX'],
+    ['FP-241','Factory Packs','Poliuretano negro mate, kit','BR',81,165,60,0.024,12,12,0.25,null],
+    ['WM-301','W-Mix Toners','Tóner azul ftalo, litro','EU',31,72,210,0.0011,60,18,0.15,null],
+    ['WM-308','W-Mix Toners','Tóner rojo óxido, litro','EU',28,66,190,0.0011,60,18,0.15,null],
+    ['WM-315','W-Mix Toners','Tóner amarillo, litro','EU',29,68,170,0.0011,60,18,0.15,null],
+    ['WM-322','W-Mix Toners','Tóner aluminio fino, litro','EU',36,84,140,0.0011,60,18,0.15,null],
+    ['GR-401','Grinice','Grinice MAX, galón','MX',14,33,520,0.0045,40,24,0.35,'US'],
+    ['GR-406','Grinice','Grinice promoción, galón','MX',12.5,27,460,0.0045,40,24,0.4,null],
+    ['GR-412','Grinice','Grinice sellador, cubeta','MX',46,95,85,0.022,16,24,0.3,null],
+    ['QL-501','Q-Line','Masilla poliéster, galón','US',13,29,300,0.0045,24,18,0.2,null],
+    ['QL-507','Q-Line','Lija grano 320, caja','US',18,41,260,0.003,20,60,0.1,null],
+    ['QL-513','Q-Line','Cinta de enmascarar, caja','US',21,44,230,0.006,20,60,0.1,null],
+    ['DF-601','Delforce','Desengrasante industrial, galón','CN',6.2,16,700,0.0045,96,36,0.2,'US'],
+    ['DF-609','Delforce','Removedor de pintura, galón','CN',9.5,23,240,0.0045,96,24,0.2,null],
+    ['DF-615','Delforce','Limpiador de pistola, galón','CN',7.1,17,180,0.0045,96,36,0.2,null],
+    ['DF-622','Delforce','Protector anticorrosivo spray, caja','CN',24,49,4,0.006,48,24,0.1,null],
+    ['RF-160','Refinishing','Primer epóxico verde, galón','EU',19,40,3,0.0045,48,18,0.1,null]
+  ];
+  const skus = cat.map((c, i) => {
+    const trend = 0.004 + g() * 0.006;
+    const hist = MESES.map((m, t) => {
+      const est = 1 + c[10] * Math.cos(2 * Math.PI * (m.getMonth() - 5) / 12);
+      return Math.max(0, Math.round(c[6] * (1 + trend * t) * est * (1 + 0.16 * g())));
+    });
+    const mensual = avg(hist.slice(-3));
+    const perfil = R();
+    let dias = perfil < 0.45 ? 15 + R() * 35 : perfil < 0.7 ? 50 + R() * 60 : 90 + R() * 120;
+    if (c[6] < 10) dias = 400 + R() * 300; // productos sin rotación
+    const onhand = Math.round(mensual / 30.4 * dias + (c[6] < 10 ? 380 : 0));
+    const onorder = R() < 0.3 ? Math.round(mensual * (0.6 + R())) : 0;
+    const back = R() < 0.15 ? Math.round(mensual * 0.1) : 0;
+    return { sku:c[0], linea:c[1], nombre:c[2], prov:c[3], costo:c[4], precio:c[5], hist, cbm:c[7], moq:c[8], vida:c[9], alterno:c[11],
+      onhand, onorder, back, clientes: Math.max(1, Math.round(c[6] / 18 + R() * 8)) };
+  });
+  // clientes
+  const segs = ['Taller de colisión','Planta industrial','Contratista','Distribuidor local'];
+  const clientes = [];
+  for (let i = 0; i < 118; i++){
+    const inicio = i < 62 ? 0 : Math.min(23, Math.floor(1 + Math.pow(R(), 0.6) * 23));
+    const ciclo = 18 + R() * 55, ticket = Math.exp(Math.log(650) + 0.7 * g());
+    const baja = R() < 0.22 ? inicio + Math.floor(R() * (24 - inicio)) : 99;
+    const compras = [];
+    for (let t = inicio; t < 24 && t <= baja; t++){
+      const lam = 30.4 / ciclo; let k = 0, p = Math.exp(-lam), F = p, u = R();
+      while (u > F && k < 6){ k++; p *= lam / k; F += p; }
+      for (let j = 0; j < k; j++){
+        const f = new Date(MESES[t].getTime() + Math.floor(R() * 28) * DIA);
+        if (f < HOY) compras.push({ f: f.toISOString().slice(0,10), m: Math.round(ticket * (0.6 + 0.8 * R())) });
+      }
+    }
+    clientes.push({ id: 'C' + String(i + 1).padStart(3,'0'), nombre: 'Cliente ' + String(i + 1).padStart(3,'0'), segmento: segs[Math.floor(R() * 4)], inicio: MESES[inicio].toISOString().slice(0,7), compras });
+  }
+  return { fuente:'demo', meses: MESES.map(m => m.toISOString().slice(0,7)), proveedores, skus, clientes };
+}
+
+/* ---------- Planificación ---------- */
+const BASE = { demanda:0, retrasoCN:0, arancelCN:0, servicio:0, tasa:0.09, mantener:0.22, costoPedido:150 };
+
+function clasificar(skus){
+  const ing = skus.map(k => ({ k, v: sum(k.hist.slice(-12)) * k.precio })).sort((a, b) => b.v - a.v);
+  const tot = sum(ing.map(x => x.v)) || 1; let acum = 0;
+  ing.forEach(x => { acum += x.v; x.k._abc = acum / tot <= 0.8 ? 'A' : acum / tot <= 0.95 ? 'B' : 'C';
+    const h = x.k.hist.slice(-12), m = avg(h), cv = m > 0 ? Math.sqrt(avg(h.map(v => (v - m) ** 2))) / m : 9;
+    x.k._xyz = cv < 0.25 ? 'X' : cv < 0.5 ? 'Y' : 'Z'; x.k._ing12 = x.v; });
+}
+
+function planificar(D, P){
+  const provs = Object.fromEntries(D.proveedores.map(p => [p.id, p]));
+  clasificar(D.skus);
+  const filas = D.skus.map(k => {
+    const pv = provs[k.prov];
+    const lt = pv.lt + (pv.id === 'CN' ? P.retrasoCN * 7 : 0);
+    const ltSd = pv.ltSd * (pv.id === 'CN' && P.retrasoCN ? 1.3 : 1);
+    const fc = pronostico(k.hist);
+    const fac = 1 + P.demanda / 100;
+    const f = fc.f.map(v => v * fac);
+    const nM = clamp(Math.ceil((lt + pv.revision) / 30.4), 1, 6);
+    const d = avg(f.slice(0, nM)) / 30.4;
+    const sd = fc.sigma * fac / Math.sqrt(30.4);
+    const sensible = k._abc === 'A' || k.clientes >= 15;
+    let ns = k._abc === 'A' ? (k._xyz === 'Z' ? 0.97 : 0.98) : k._abc === 'B' ? 0.95 : 0.90;
+    if (sensible && ns < 0.97) ns = 0.97;
+    ns = clamp(ns + P.servicio / 100, 0.5, 0.995);
+    const z = zInv(ns);
+    const ss = z * Math.sqrt(lt * sd * sd + d * d * ltSd * ltSd);
+    const rop = d * lt + ss;
+    const pos = k.onhand + k.onorder - k.back;
+    const cobertura = d > 0.01 ? pos / d : Infinity;
+    const objetivo = d * (lt + pv.revision) + ss;
+    const necesidad = Math.max(0, objetivo - pos);
+    const fob = k.costo;
+    const arancelPct = pv.arancel + (pv.id === 'CN' ? P.arancelCN / 100 : 0);
+    const flete = pv.fleteM3 * k.cbm, seguro = pv.seguro * (fob + flete), arancel = arancelPct * fob, acarreo = pv.acarreoM3 * k.cbm;
+    const baseU = fob + flete + seguro + arancel + acarreo;
+    const H = baseU * P.mantener, Danual = d * 365, S = P.costoPedido + pv.brokerPO;
+    const eoq = Danual > 0 ? Math.sqrt(2 * Danual * S / H) : 0;
+    const tope = d * k.vida * 30.4 * 0.75;
+    let qty = 0;
+    if (necesidad > 0 && d > 0.01){
+      qty = Math.max(necesidad, Math.min(eoq, tope));
+      qty = Math.ceil(qty / k.moq) * k.moq;
+    }
+    let estado;
+    if (d < 0.2 && k.onhand > 0) estado = 'sin-venta';
+    else if (cobertura < lt) estado = 'critico';
+    else if (pos <= rop) estado = 'ordenar';
+    else if (cobertura > lt + pv.revision + 150) estado = 'exceso';
+    else estado = 'ok';
+    const diasOrdenar = d > 0.01 ? (pos - rop) / d : Infinity;
+    // revisión periódica: si cruzará el punto de reorden antes de la próxima revisión, se ordena ahora
+    if (estado === 'ok' && diasOrdenar <= pv.revision) estado = 'ordenar';
+    if (estado === 'sin-venta' || estado === 'exceso' || estado === 'ok') qty = 0;
+    const fechaQuiebre = d > 0.01 ? new Date(HOY.getTime() + Math.max(0, k.onhand - k.back) / d * DIA) : null;
+    const faltante = estado === 'critico' ? Math.max(0, lt - cobertura) : 0;
+    const ventaRiesgo = faltante * d * k.precio;
+    const valorInv = k.onhand * k.costo;
+    return { k, pv, lt, ltSd, d, sd, fc, f, ns, z, ss, rop, pos, cobertura, objetivo, necesidad, eoq, tope, qty, estado,
+      diasOrdenar, fechaQuiebre, faltante, ventaRiesgo, valorInv, sensible,
+      costo: { fob, flete, seguro, arancel, acarreo, arancelPct } };
+  });
+  // segunda pasada: costos que dependen del tamaño de la orden (agente aduanal, pedido, anticipos, mantener)
+  const porProv = {};
+  filas.filter(r => r.qty > 0).forEach(r => { (porProv[r.pv.id] ??= []).push(r); });
+  for (const id in porProv){
+    const pv = provs[id], ls = porProv[id], uds = sum(ls.map(r => r.qty));
+    const adelanto = sum(pv.pagos.map(p => p.pct * Math.max(0, p.ref === 'orden' ? (ls[0].lt - p.dias) : -p.dias)));
+    ls.forEach(r => {
+      const c = r.costo;
+      c.aduanaPedido = (pv.brokerPO + P.costoPedido) / uds;
+      c.anticipo = c.fob * P.tasa * adelanto / 365;
+      const diasAlm = Math.min(240, r.qty / (2 * r.d) + r.ss / r.d);
+      c.mantener = (c.fob + c.flete + c.seguro + c.arancel + c.acarreo) * P.mantener * diasAlm / 365;
+      c.diasAlm = diasAlm; c.diasAdelanto = adelanto;
+      c.unit = c.fob + c.flete + c.seguro + c.arancel + c.acarreo + c.aduanaPedido + c.anticipo + c.mantener;
+      c.total = c.unit * r.qty;
+      c.margen = (r.k.precio - c.unit) / r.k.precio;
+    });
+  }
+  filas.forEach(r => { if (!r.costo.unit){ const c = r.costo; c.unit = c.fob + c.flete + c.seguro + c.arancel + c.acarreo; c.total = 0; c.margen = (r.k.precio - c.unit) / r.k.precio; } });
+  const ordenes = Object.entries(porProv).map(([id, ls]) => {
+    const pv = provs[id], cbm = sum(ls.map(r => r.qty * r.k.cbm)), total = sum(ls.map(r => r.costo.total)), fobT = sum(ls.map(r => r.qty * r.costo.fob));
+    const contenedores = pv.maritimo ? Math.max(1, Math.ceil(cbm / 28)) : 0;
+    const llegada = new Date(HOY.getTime() + ls[0].lt * DIA);
+    const pagos = pv.pagos.map(p => ({ fecha: new Date(p.ref === 'orden' ? HOY.getTime() + p.dias * DIA : llegada.getTime() + p.dias * DIA), monto: p.pct * fobT }));
+    const logistica = sum(ls.map(r => r.qty * (r.costo.flete + r.costo.seguro + r.costo.arancel + r.costo.acarreo))) + pv.brokerPO;
+    pagos.push({ fecha: llegada, monto: logistica, nota:'flete, arancel y aduana' });
+    return { pv, lineas: ls.sort((a, b) => a.diasOrdenar - b.diasOrdenar), cbm, contenedores, llenado: contenedores ? cbm / (contenedores * 28) : null, total, fobT, llegada, pagos,
+      urgente: ls.some(r => r.estado === 'critico') };
+  }).sort((a, b) => b.urgente - a.urgente || b.total - a.total);
+  return { filas, ordenes, P };
+}
+
+/* Proyección diaria de existencias para un SKU */
+function proyectarStock(r, conCompra, dias = 180){
+  const out = []; let s = r.k.onhand - r.k.back;
+  const llegadaTransito = Math.round(r.pv.lt / 2), llegadaCompra = Math.round(r.lt);
+  for (let t = 0; t <= dias; t++){
+    const mes = Math.min(5, Math.floor(t / 30.4)), dd = r.f[mes] / 30.4;
+    if (t === llegadaTransito) s += r.k.onorder;
+    if (conCompra && t === llegadaCompra) s += r.qty;
+    if (t > 0) s -= dd;
+    out.push(Math.max(0, s));
+  }
+  return out;
+}
+
+/* Métricas de clientes */
+function metricasClientes(D){
+  const hoy = HOY.getTime();
+  const filas = D.clientes.map(c => {
+    const fs = c.compras.map(x => new Date(x.f).getTime()).sort((a, b) => a - b);
+    const ult = fs.length ? fs[fs.length - 1] : null;
+    const gaps = fs.slice(1).map((v, i) => (v - fs[i]) / DIA);
+    const ciclo = gaps.length ? avg(gaps) : null;
+    const dias = ult ? (hoy - ult) / DIA : null;
+    const ultimos = c.compras.filter(x => hoy - new Date(x.f).getTime() <= 365 * DIA);
+    return { c, ult, ciclo, dias, n90: c.compras.filter(x => hoy - new Date(x.f).getTime() <= 90 * DIA).length,
+      n180: c.compras.filter(x => { const d = (hoy - new Date(x.f).getTime()) / DIA; return d > 90 && d <= 180; }).length,
+      ventas12: sum(ultimos.map(x => x.m)), ticket: avg(c.compras.map(x => x.m)) };
+  });
+  const activos = filas.filter(f => f.n90 > 0).length;
+  const base = filas.filter(f => f.n180 > 0), recompra = base.length ? base.filter(f => f.n90 > 0).length / base.length : 0;
+  const enRiesgo = filas.filter(f => f.ciclo && f.dias > f.ciclo * 1.4 && f.dias <= 200).sort((a, b) => b.ventas12 - a.ventas12);
+  const totalV = sum(filas.map(f => f.ventas12)) || 1;
+  const top10 = sum(filas.map(f => f.ventas12).sort((a, b) => b - a).slice(0, 10)) / totalV;
+  const nuevos = D.meses.map(m => D.clientes.filter(c => c.inicio === m && c.compras.length).length);
+  nuevos[0] = Math.round(avg(nuevos.slice(1, 4)));
+  const ventasMes = D.meses.map(m => sum(D.clientes.flatMap(c => c.compras.filter(x => x.f.slice(0,7) === m).map(x => x.m))));
+  const y = nuevos.slice(-12), xs = y.map((_, i) => i), mx = avg(xs), my = avg(y);
+  const pend = sum(xs.map((x, i) => (x - mx) * (y[i] - my))) / (sum(xs.map(x => (x - mx) ** 2)) || 1);
+  const nuevosProy = Array.from({length:6}, (_, k) => Math.max(0, my + pend * (12 + k - mx)));
+  const fv = pronostico(ventasMes);
+  const nuevosFilas = filas.filter(f => f.c.inicio >= D.meses[D.meses.length - 12]);
+  const ticketNuevo = avg(nuevosFilas.map(f => f.ticket).filter(Boolean)) || 600;
+  const frecNuevo = 1.2;
+  const aporteNuevos = nuevosProy.map((_, k) => sum(nuevosProy.slice(0, k + 1)) * ticketNuevo * frecNuevo);
+  const actuales = fv.f.map((v, k) => Math.max(0, v - aporteNuevos[k] * 0.5));
+  return { filas, activos, total: filas.length, recompra, enRiesgo, top10, nuevos, nuevosProy, ventasMes, fv, aporteNuevos, actuales,
+    valorRiesgo: sum(enRiesgo.map(f => f.ventas12 / 4)) };
+}
+
+/* Explicación en lenguaje claro de cada sugerido */
+function explicar(r){
+  const k = r.k, n = x => Math.round(x).toLocaleString('es-US'), $ = x => '$' + x.toLocaleString('es-US',{maximumFractionDigits:2});
+  const out = [];
+  const prox = r.fc.idxProx;
+  out.push(`Demanda proyectada: ${n(r.d * 30.4)} u/mes (${r.d.toFixed(1)} u/día) para el periodo de reposición. Los próximos 3 meses van ${prox >= 1 ? '+' : ''}${Math.round((prox - 1) * 100)}% frente al promedio del último año${Math.abs(prox - 1) > 0.08 ? (prox > 1 ? ', por la temporada alta de pintura' : ', por la temporada baja') : ''}.`);
+  const a = sum(k.hist.slice(-12)), b = sum(k.hist.slice(0, 12));
+  if (b > 0) out.push(`Tendencia: las ventas de los últimos 12 meses van ${a >= b ? '+' : ''}${Math.round((a / b - 1) * 100)}% contra los 12 anteriores.`);
+  out.push(`Tiempo de reposición: ${r.pv.nombre} (${r.pv.origen}) tarda ${Math.round(r.lt)} días en promedio, con variación de ±${Math.round(r.ltSd)} días.`);
+  out.push(`Posición hoy: ${n(k.onhand)} en almacén + ${n(k.onorder)} en tránsito − ${n(k.back)} comprometidos = ${n(r.pos)} u, que cubren ${isFinite(r.cobertura) ? n(r.cobertura) + ' días' : 'indefinidamente'}.`);
+  out.push(`Protección: producto clase ${k._abc}${k._xyz === 'Z' ? ' con demanda muy variable' : ''}${r.sensible ? ' y sensible para clientes' : ''}. Se protege ${(r.ns * 100).toFixed(1)}% de nivel de servicio: stock de seguridad de ${n(r.ss)} u (${Math.round(r.ss / Math.max(r.d, 0.01))} días). Punto de reorden: ${n(r.rop)} u.`);
+  if (r.qty > 0){
+    out.push(`Cantidad: se necesitan ${n(r.necesidad)} u para cubrir ${Math.round(r.lt + r.pv.revision)} días más el colchón. El lote económico (equilibrio entre costo de pedir y de almacenar) es ${n(r.eoq)} u y el tope por vida útil (${k.vida} meses) es ${n(r.tope)} u. Redondeado al múltiplo de compra de ${k.moq}: ${n(r.qty)} u.`);
+    const c = r.costo;
+    out.push(`Costo puesto en almacén: ${$(c.unit)}/u frente a ${$(c.fob)} FOB (+${Math.round((c.unit / c.fob - 1) * 100)}%). Incluye flete ${$(c.flete)}, arancel ${$(c.arancel)} (${Math.round(c.arancelPct * 100)}%), aduana y pedido ${$(c.aduanaPedido)}, anticipos ${$(c.anticipo)} y mantener inventario ${$(c.mantener)}. Margen esperado: ${Math.round(c.margen * 100)}%.`);
+  }
+  if (r.estado === 'critico'){
+    out.push(`Riesgo: aunque se ordene hoy, faltarán unos ${Math.round(r.faltante)} días de inventario antes de que llegue la compra. Venta en riesgo: ${'$' + n(r.ventaRiesgo)}.${k.alterno ? ` Recomendación: pedido puente con el proveedor de ${k.alterno === 'US' ? 'EE.UU.' : 'México'} para cubrir el hueco.` : ' No hay proveedor alterno registrado: priorizar a los clientes clave.'}`);
+  } else if (r.estado === 'ordenar'){
+    out.push(r.diasOrdenar <= 0 ? `Urgencia: ya cruzó el punto de reorden. Ordenar esta semana para no consumir el stock de seguridad.`
+      : `Urgencia: llegará al punto de reorden en ${Math.round(r.diasOrdenar)} días, antes de la próxima revisión de compras (cada ${r.pv.revision} días). Conviene incluirlo en esta orden.`);
+  } else if (r.estado === 'sin-venta'){
+    out.push(`Sin ventas relevantes en 12 meses: ${'$' + n(r.valorInv)} de capital inmovilizado. Sugerencia: promoción o devolución al proveedor, no recomprar.`);
+  } else if (r.estado === 'exceso'){
+    out.push(`Exceso: cubre más de ${Math.round(r.lt + r.pv.revision + 150)} días. No recomprar; evaluar mover a clientes con mayor consumo.`);
+  } else if (isFinite(r.diasOrdenar)){
+    out.push(`Sin urgencia: llegará al punto de reorden en unos ${Math.round(r.diasOrdenar)} días.`);
+  }
+  return out;
+}
+
+function cargarJSON(obj){
+  if (!obj || !Array.isArray(obj.skus) || !Array.isArray(obj.proveedores)) throw new Error('El archivo debe tener "skus" y "proveedores".');
+  obj.skus.forEach(k => { if (!Array.isArray(k.hist) || k.hist.length < 12) throw new Error(`El SKU ${k.sku} necesita al menos 12 meses en "hist".`); });
+  obj.clientes ??= []; obj.meses ??= MESES.map(m => m.toISOString().slice(0,7));
+  return obj;
+}
+if (typeof module !== 'undefined') module.exports = { datosDemo, planificar, metricasClientes, explicar, proyectarStock, pronostico, BASE };
+</script>
+
+<script>
+/* ================= INTERFAZ ================= */
+let DATA = datosDemo(), P = { ...BASE }, PLAN, BASEPLAN, CLI, sample = null;
+const charts = {};
+const $ = s => document.querySelector(s);
+const n0 = x => isFinite(x) ? Math.round(x).toLocaleString('es-US') : '∞';
+const usd = x => '$' + Math.round(x).toLocaleString('es-US');
+const usdK = x => Math.abs(x) >= 1000 ? '$' + (x / 1000).toLocaleString('es-US',{maximumFractionDigits:1}) + 'k' : usd(x);
+const ESTADO = { critico:'Se agota antes de reponer', ordenar:'Ordenar ya', ok:'En nivel', exceso:'Exceso', 'sin-venta':'Sin venta' };
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function gauge(valor, etiqueta, texto, nota, color){
+  const v = clamp(valor, 0, 1), a = Math.PI * (1 - v), x = 85 + 65 * Math.cos(a), y = 85 - 65 * Math.sin(a);
+  return `<div class="card gauge"><svg viewBox="0 0 170 100" role="img" aria-label="${esc(etiqueta)}: ${esc(texto)}">
+    <path d="M20 85 A65 65 0 0 1 150 85" fill="none" stroke="${css('--surface2')}" stroke-width="14" stroke-linecap="round"/>
+    ${v > 0.001 ? `<path d="M20 85 A65 65 0 0 1 ${x.toFixed(1)} ${y.toFixed(1)}" fill="none" stroke="${color}" stroke-width="14" stroke-linecap="round"/>` : ''}
+  </svg><div class="v">${texto}</div><div class="l">${etiqueta}</div>${nota ? `<div class="n">${nota}</div>` : ''}</div>`;
+}
+const semaforo = (v, bueno, malo) => v >= bueno ? css('--ok') : v >= malo ? css('--warn') : css('--crit');
+
+function chart(id, cfg){
+  if (typeof Chart === 'undefined'){ const c = document.getElementById(id); if (c) c.parentElement.innerHTML = '<p class="lead">No se pudo cargar la librería de gráficas. Revise la conexión y recargue.</p>'; return; }
+  charts[id]?.destroy();
+  Chart.defaults.color = css('--muted'); Chart.defaults.borderColor = css('--line');
+  Chart.defaults.font.family = '"IBM Plex Sans", system-ui, sans-serif';
+  charts[id] = new Chart(document.getElementById(id), cfg);
+}
+
+function recalcular(){
+  PLAN = planificar(DATA, P);
+  render();
+}
+
+function render(){
+  const F = PLAN.filas, act = F.filter(r => r.d > 0.2);
+  const pesoD = sum(act.map(r => r.d)) || 1;
+  const servicio = sum(act.map(r => r.d * (r.estado === 'critico' ? Math.max(0, r.cobertura / r.lt) : 1))) / pesoD;
+  const crit = F.filter(r => r.estado === 'critico'), sensiblesCrit = crit.filter(r => r.sensible);
+  const cobMed = sum(act.map(r => r.d * Math.min(r.cobertura, 365))) / pesoD;
+  const valorInv = sum(F.map(r => r.valorInv)), cogs = sum(F.map(r => sum(r.k.hist.slice(-12)) * r.k.costo));
+  const rot = valorInv ? cogs / valorInv : 0;
+  const inmov = sum(F.filter(r => r.estado === 'sin-venta').map(r => r.valorInv)) + sum(F.filter(r => r.estado === 'exceso').map(r => Math.max(0, r.k.onhand - r.objetivo) * r.k.costo));
+  const riesgo = sum(F.map(r => r.ventaRiesgo)), inversion = sum(PLAN.ordenes.map(o => o.total));
+  $('#resumenTxt').textContent = `Hoy, ${HOY.toLocaleDateString('es-US',{day:'numeric',month:'long',year:'numeric'})}: ${crit.length} productos se agotarán antes de que llegue una compra nueva y ${F.filter(r => r.estado === 'ordenar').length} ya deben ordenarse. La recompra sugerida suma ${usd(inversion)} puestos en almacén, en ${PLAN.ordenes.length} órdenes.`;
+  $('#gaugesInt').innerHTML =
+    gauge(servicio, 'Nivel de servicio esperado', Math.round(servicio * 100) + '%', 'Meta 97%', semaforo(servicio, 0.97, 0.9)) +
+    gauge(1 - sensiblesCrit.length / Math.max(1, F.filter(r => r.sensible).length), 'Productos sensibles en riesgo', String(sensiblesCrit.length), `de ${F.filter(r => r.sensible).length} sensibles`, sensiblesCrit.length ? css('--crit') : css('--ok')) +
+    gauge(clamp(cobMed / 120, 0, 1), 'Cobertura media ponderada', n0(cobMed) + ' d', 'Días de venta en stock', semaforo(cobMed, 45, 25)) +
+    gauge(clamp(rot / 8, 0, 1), 'Rotación anual de inventario', rot.toFixed(1) + '×', 'Costo de venta / inventario', semaforo(rot, 4, 2.5)) +
+    gauge(clamp(inmov / Math.max(valorInv, 1), 0, 1), 'Capital inmovilizado', usdK(inmov), Math.round(inmov / Math.max(valorInv, 1) * 100) + '% del inventario', semaforo(1 - inmov / Math.max(valorInv, 1), 0.9, 0.8)) +
+    gauge(clamp(riesgo / Math.max(1, sum(F.map(r => r.d * 90 * r.k.precio))), 0, 1), 'Venta en riesgo por quiebre', usdK(riesgo), 'Si no se actúa hoy', riesgo ? css('--crit') : css('--ok'));
+  const top = F.filter(r => ['critico','ordenar'].includes(r.estado)).sort((a, b) => (b.estado === 'critico') - (a.estado === 'critico') || b.sensible - a.sensible || a.diasOrdenar - b.diasOrdenar).slice(0, 6);
+  $('#atencion').innerHTML = top.length ? top.map(r => `<div class="it" data-sku="${r.k.sku}" tabindex="0" role="button">
+    <b>${esc(r.k.nombre)}</b><span class="st ${r.estado}">${ESTADO[r.estado]}</span>
+    <small>${r.k.sku} · cubre ${n0(r.cobertura)} días, el proveedor tarda ${Math.round(r.lt)} · sugerido ${n0(r.qty)} u por ${usd(r.costo.total)}${r.estado === 'critico' && r.k.alterno ? ' · pedido puente posible' : ''}</small></div>`).join('')
+    : '<p class="lead">Ningún producto requiere acción hoy.</p>';
+  chart('chProv', { type:'bar', data:{ labels: PLAN.ordenes.map(o => o.pv.origen), datasets:[
+      { label:'Producto (FOB)', data: PLAN.ordenes.map(o => o.fobT), backgroundColor: css('--accent') },
+      { label:'Logística, arancel y costos financieros', data: PLAN.ordenes.map(o => o.total - o.fobT), backgroundColor: css('--warn') } ]},
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{ x:{ stacked:true, ticks:{ callback:v => usdK(v) } }, y:{ stacked:true } },
+      plugins:{ tooltip:{ callbacks:{ label:c => `${c.dataset.label}: ${usd(c.raw)}` } } } } });
+  renderInventario(); renderRecompra(); renderProyeccion(); renderClientes(); renderSim(); renderProvTabla();
+  $('#pie').textContent = `Motor QORTEX v0.1 · Pronóstico Holt-Winters con tendencia amortiguada · Stock de seguridad con variabilidad de demanda y de tiempo de entrega · Lote económico con tope por vida útil · Fuente: ${DATA.fuente === 'demo' ? 'datos de demostración generados para la presentación' : 'archivo cargado de NetSuite'}.`;
+}
+
+let filtro = 'todos', busqueda = '';
+function renderInventario(){
+  const cnt = s => PLAN.filas.filter(r => r.estado === s).length;
+  const ops = [['todos','Todos',PLAN.filas.length],['critico','Se agota',cnt('critico')],['ordenar','Ordenar ya',cnt('ordenar')],['ok','En nivel',cnt('ok')],['exceso','Exceso',cnt('exceso')],['sin-venta','Sin venta',cnt('sin-venta')]];
+  $('#filtros').innerHTML = ops.map(([k, l, c]) => `<button class="chip" data-f="${k}" aria-pressed="${filtro === k}">${l} (${c})</button>`).join('') +
+    `<input class="search" id="buscar" placeholder="Buscar SKU o producto" value="${esc(busqueda)}" aria-label="Buscar">`;
+  const orden = { critico:0, ordenar:1, ok:2, exceso:3, 'sin-venta':4 };
+  const rows = PLAN.filas.filter(r => (filtro === 'todos' || r.estado === filtro) && (!busqueda || (r.k.sku + ' ' + r.k.nombre).toLowerCase().includes(busqueda.toLowerCase())))
+    .sort((a, b) => orden[a.estado] - orden[b.estado] || a.cobertura - b.cobertura);
+  const maxD = 200;
+  $('#tInv').innerHTML = `<tr><th>Producto</th><th>Proveedor</th><th class="num">En almacén</th><th class="num">En tránsito</th><th class="num">Venta/mes</th><th>Cobertura vs. llegada</th><th>Estado</th><th class="num">Sugerido</th></tr>` +
+    rows.map(r => { const cob = Math.min(r.cobertura, maxD), col = { critico:'--crit', ordenar:'--warn', ok:'--ok', exceso:'--excess', 'sin-venta':'--gray' }[r.estado];
+      return `<tr class="click" data-sku="${r.k.sku}" tabindex="0"><td><b>${esc(r.k.nombre)}</b><br><span class="tag">${r.k.sku}</span> <span class="tag">${r.k.linea}</span> <span class="tag">${r.k._abc}${r.k._xyz}</span>${r.sensible ? ' <span class="tag crit">Sensible</span>' : ''}</td>
+      <td>${r.pv.origen}</td><td class="num">${n0(r.k.onhand)}</td><td class="num">${n0(r.k.onorder)}</td><td class="num">${n0(r.d * 30.4)}</td>
+      <td><div class="ruler" title="Cubre ${n0(r.cobertura)} días; el proveedor tarda ${Math.round(r.lt)}"><div class="fill" style="width:${cob / maxD * 100}%;background:var(${col})"></div><div class="lt" style="left:${Math.min(r.lt, maxD) / maxD * 100}%"></div><span class="lab">${n0(r.cobertura)} d</span></div></td>
+      <td><span class="st ${r.estado}">${ESTADO[r.estado]}</span></td><td class="num">${r.qty ? n0(r.qty) : '—'}</td></tr>`; }).join('');
+}
+
+function renderRecompra(){
+  const L = PLAN.ordenes.flatMap(o => o.lineas);
+  const comp = ['fob','flete','seguro','arancel','acarreo','aduanaPedido','anticipo','mantener'], nom = ['Producto FOB','Flete','Seguro','Arancel','Acarreo','Aduana y pedido','Costo de anticipos','Mantener inventario'];
+  const tot = comp.map(c => sum(L.map(r => (r.costo[c] || 0) * r.qty)));
+  const pal = [css('--accent'), css('--warn'), css('--gray'), css('--crit'), css('--excess'), '#7FA7C9', '#C9A86B', css('--ok')];
+  chart('chCosto', { type:'doughnut', data:{ labels: nom, datasets:[{ data: tot, backgroundColor: pal, borderColor: css('--surface'), borderWidth:2 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right' }, tooltip:{ callbacks:{ label:c => `${c.label}: ${usd(c.raw)} (${Math.round(c.raw / (sum(tot) || 1) * 100)}%)` } } } } });
+  const meses = MESES_FUT.map(etiquetaMes);
+  chart('chCaja', { type:'bar', data:{ labels: meses, datasets: PLAN.ordenes.map((o, i) => ({ label: o.pv.origen, backgroundColor: pal[i % pal.length],
+      data: MESES_FUT.map(m => sum(o.pagos.filter(p => p.fecha.getFullYear() === m.getFullYear() && p.fecha.getMonth() === m.getMonth()).map(p => p.monto))) })) },
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{ stacked:true }, y:{ stacked:true, ticks:{ callback:v => usdK(v) } } }, plugins:{ tooltip:{ callbacks:{ label:c => `${c.dataset.label}: ${usd(c.raw)}` } } } } });
+  $('#provList').innerHTML = PLAN.ordenes.length ? PLAN.ordenes.map(o => `<div class="card">
+    <div class="provhead"><h3>${o.pv.nombre} · ${o.pv.origen}${o.urgente ? ' <span class="st critico">Urgente</span>' : ''}</h3><span class="tag">${o.pv.terminos}</span></div>
+    <div class="kv" style="margin:12px 0">
+      <div><b>${usd(o.total)}</b><span>Costo puesto en almacén</span></div>
+      <div><b>${usd(o.fobT)}</b><span>Valor FOB</span></div>
+      <div><b>${o.lineas.length}</b><span>Productos</span></div>
+      <div><b>${o.llegada.toLocaleDateString('es-US',{day:'numeric',month:'short'})}</b><span>Llegada si se ordena hoy</span></div>
+      <div><b>${o.contenedores ? o.contenedores + ' × 20′' : o.cbm.toFixed(1) + ' m³'}</b><span>${o.contenedores ? 'Llenado ' + Math.round(o.llenado * 100) + '%' : 'Terrestre'}</span></div>
+    </div>
+    ${o.contenedores ? `<div class="cont" title="Llenado del contenedor"><i style="width:${Math.round(o.llenado * 100)}%"></i></div>${o.llenado < 0.6 ? '<p class="delta">El contenedor va a menos del 60%: conviene adelantar productos de este proveedor para aprovechar el flete.</p>' : ''}` : ''}
+    <div class="tablewrap"><table><tr><th>Producto</th><th>Estado</th><th class="num">Cantidad</th><th class="num">Costo unitario puesto</th><th class="num">Total</th><th class="num">Margen</th></tr>
+    ${o.lineas.map(r => `<tr><td><b>${esc(r.k.nombre)}</b> <span class="tag">${r.k.sku}</span>
+      <details class="why"><summary>¿Por qué?</summary><ul class="reasons">${explicar(r).map(t => `<li>${esc(t)}</li>`).join('')}</ul></details></td>
+      <td><span class="st ${r.estado}">${ESTADO[r.estado]}</span></td><td class="num">${n0(r.qty)}</td><td class="num">$${r.costo.unit.toFixed(2)}</td><td class="num">${usd(r.costo.total)}</td><td class="num">${Math.round(r.costo.margen * 100)}%</td></tr>`).join('')}
+    </table></div></div>`).join('') : '<div class="card"><p class="lead">No hay compras sugeridas con los supuestos actuales.</p></div>';
+}
+
+function datasetsDemanda(r){
+  const labH = MESES.map(etiquetaMes), labF = MESES_FUT.map(etiquetaMes), z = 1.28, fac = 1 + P.demanda / 100;
+  const hist = r.k.hist.concat(Array(6).fill(null));
+  const fc = Array(r.k.hist.length - 1).fill(null).concat([r.k.hist[r.k.hist.length - 1]], r.f);
+  const sup = Array(r.k.hist.length).fill(null).concat(r.f.map((v, i) => v + z * r.fc.sigma * fac * Math.sqrt(i + 1)));
+  const inf = Array(r.k.hist.length).fill(null).concat(r.f.map((v, i) => Math.max(0, v - z * r.fc.sigma * fac * Math.sqrt(i + 1))));
+  return { labels: labH.concat(labF), hist, fc, sup, inf };
+}
+function lineCfg(labels, sets, fmt){
+  return { type:'line', data:{ labels, datasets: sets }, options:{ responsive:true, maintainAspectRatio:false, interaction:{ mode:'index', intersect:false },
+    elements:{ point:{ radius:0 }, line:{ tension:0.25, borderWidth:2 } }, scales:{ y:{ beginAtZero:true, ticks:{ callback: fmt || (v => n0(v)) } }, x:{ ticks:{ maxTicksLimit:12 } } },
+    plugins:{ legend:{ labels:{ filter: i => !i.text.startsWith('_') } }, tooltip:{ filter: i => !i.dataset.label.startsWith('_') } } } };
+}
+function renderProyeccion(){
+  const sel = $('#selSku'), cur = sel.value;
+  sel.innerHTML = PLAN.filas.map(r => `<option value="${r.k.sku}">${r.k.sku} · ${esc(r.k.nombre)}</option>`).join('');
+  const prior = PLAN.filas.find(r => r.estado === 'critico') || PLAN.filas[0];
+  sel.value = cur && PLAN.filas.some(r => r.k.sku === cur) ? cur : prior.k.sku;
+  dibujarSku(sel.value, 'chDem', 'chInvP');
+  const m = CLI; const vH = m.ventasMes, labs = MESES.map(etiquetaMes).concat(MESES_FUT.map(etiquetaMes));
+  chart('chVentas', lineCfg(labs, [
+    { label:'Ventas reales', data: vH.concat(Array(6).fill(null)), borderColor: css('--text') },
+    { label:'Pronóstico', data: Array(vH.length - 1).fill(null).concat([vH[vH.length - 1]], m.fv.f.map(v => v * (1 + P.demanda / 100))), borderColor: css('--accent'), borderDash:[6,4] }
+  ], v => usdK(v)));
+  const dias = 180, tot = Array.from({length: dias + 1}, () => 0), totSin = Array.from({length: dias + 1}, () => 0);
+  PLAN.filas.forEach(r => { const a = proyectarStock(r, true, dias), b = proyectarStock(r, false, dias); a.forEach((v, i) => { tot[i] += v * r.k.costo; totSin[i] += b[i] * r.k.costo; }); });
+  const lab = tot.map((_, i) => i % 15 === 0 ? new Date(HOY.getTime() + i * DIA).toLocaleDateString('es-US',{day:'numeric',month:'short'}) : '');
+  chart('chInvTot', lineCfg(lab, [
+    { label:'Con las compras sugeridas', data: tot, borderColor: css('--accent'), fill:false },
+    { label:'Sin comprar', data: totSin, borderColor: css('--crit'), borderDash:[6,4] }
+  ], v => usdK(v)));
+}
+function dibujarSku(sku, idA, idB){
+  const r = PLAN.filas.find(x => x.k.sku === sku); if (!r) return;
+  const d = datasetsDemanda(r);
+  chart(idA, lineCfg(d.labels, [
+    { label:'Ventas reales', data: d.hist, borderColor: css('--text') },
+    { label:'Pronóstico', data: d.fc, borderColor: css('--accent'), borderDash:[6,4] },
+    { label:'Rango probable (80%)', data: d.sup, borderColor:'transparent', backgroundColor: css('--accent-soft'), fill:'+1' },
+    { label:'_inf', data: d.inf, borderColor:'transparent' }
+  ]));
+  const con = proyectarStock(r, true), sin = proyectarStock(r, false);
+  const lab = con.map((_, i) => i % 15 === 0 ? new Date(HOY.getTime() + i * DIA).toLocaleDateString('es-US',{day:'numeric',month:'short'}) : '');
+  chart(idB, lineCfg(lab, [
+    { label:'Con la compra sugerida', data: con, borderColor: css('--accent') },
+    { label:'Sin comprar', data: sin, borderColor: css('--crit'), borderDash:[6,4] },
+    { label:'Punto de reorden', data: con.map(() => r.rop), borderColor: css('--warn'), borderWidth:1.5, borderDash:[2,3] },
+    { label:'Stock de seguridad', data: con.map(() => r.ss), borderColor: css('--gray'), borderWidth:1.5, borderDash:[2,3] }
+  ]));
+}
+
+function renderClientes(){
+  const m = CLI;
+  $('#gaugesCli').innerHTML =
+    gauge(m.recompra, 'Tasa de recompra a 90 días', Math.round(m.recompra * 100) + '%', 'Compraron antes y volvieron', semaforo(m.recompra, 0.75, 0.6)) +
+    gauge(m.activos / Math.max(1, m.total), 'Clientes activos', String(m.activos), `de ${m.total} registrados`, semaforo(m.activos / m.total, 0.7, 0.5)) +
+    gauge(1 - m.enRiesgo.length / Math.max(1, m.activos), 'Clientes atrasados en su recompra', String(m.enRiesgo.length), usdK(m.valorRiesgo) + ' por trimestre', m.enRiesgo.length > 10 ? css('--crit') : css('--warn')) +
+    gauge(1 - m.top10, 'Concentración en 10 clientes', Math.round(m.top10 * 100) + '%', 'De las ventas del año', semaforo(1 - m.top10, 0.6, 0.45)) +
+    gauge(clamp(sum(m.nuevosProy) / Math.max(1, sum(m.nuevos.slice(-6))), 0, 2) / 2, 'Clientes nuevos, próximos 6 meses', n0(sum(m.nuevosProy)), `vs ${sum(m.nuevos.slice(-6))} en los últimos 6`, css('--accent'));
+  const labs = MESES.map(etiquetaMes).concat(MESES_FUT.map(etiquetaMes));
+  chart('chNuevos', { type:'bar', data:{ labels: labs, datasets:[
+      { label:'Clientes nuevos', data: m.nuevos.concat(Array(6).fill(null)), backgroundColor: css('--text') },
+      { label:'Proyección', data: Array(m.nuevos.length).fill(null).concat(m.nuevosProy.map(v => Math.round(v * 10) / 10)), backgroundColor: css('--accent') } ] },
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{ stacked:true, ticks:{ maxTicksLimit:12 } }, y:{ stacked:true, beginAtZero:true } } } });
+  chart('chFut', { type:'bar', data:{ labels: MESES_FUT.map(etiquetaMes), datasets:[
+      { label:'Clientes actuales', data: m.actuales.map(v => v * (1 + P.demanda / 100)), backgroundColor: css('--accent') },
+      { label:'Clientes nuevos', data: m.aporteNuevos.map(v => v * 0.5 * (1 + P.demanda / 100)), backgroundColor: css('--warn') } ] },
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{ stacked:true }, y:{ stacked:true, ticks:{ callback:v => usdK(v) } } }, plugins:{ tooltip:{ callbacks:{ label:c => `${c.dataset.label}: ${usd(c.raw)}` } } } } });
+  $('#tCli').innerHTML = `<tr><th>Cliente</th><th>Segmento</th><th class="num">Compra cada</th><th class="num">Días sin comprar</th><th class="num">Ventas 12 meses</th><th>Acción</th></tr>` +
+    (m.enRiesgo.slice(0, 12).map(f => `<tr><td><b>${esc(f.c.nombre)}</b></td><td>${esc(f.c.segmento)}</td><td class="num">${n0(f.ciclo)} d</td><td class="num">${n0(f.dias)} d</td><td class="num">${usd(f.ventas12)}</td>
+      <td>${f.dias > f.ciclo * 2.5 ? 'Visita o llamada del vendedor' : 'Recordatorio por WhatsApp'}</td></tr>`).join('') || '<tr><td colspan="6">Todos los clientes están al día.</td></tr>');
+}
+
+function renderSim(){
+  const k = (a, b, inv) => { const d = a - b; if (Math.abs(d) < 0.5) return '<span class="delta">sin cambio</span>';
+    return `<span class="delta"><b class="${(d > 0) !== !!inv ? 'up' : 'down'}">${d > 0 ? '+' : ''}${typeof a === 'number' && Math.abs(a) > 999 ? usdK(d) : n0(d)}</b> vs. base</span>`; };
+  const B = BASEPLAN, A = PLAN;
+  const inv = x => sum(x.ordenes.map(o => o.total)), rg = x => sum(x.filas.map(r => r.ventaRiesgo)), cr = x => x.filas.filter(r => r.estado === 'critico').length;
+  const caja60 = x => sum(x.ordenes.flatMap(o => o.pagos.filter(p => p.fecha - HOY <= 60 * DIA).map(p => p.monto)));
+  $('#simKpi').innerHTML = `
+    <div><b>${cr(A)}</b><span>Productos que se agotan</span><br>${k(cr(A), cr(B))}</div>
+    <div><b>${usd(rg(A))}</b><span>Venta en riesgo</span><br>${k(rg(A), rg(B))}</div>
+    <div><b>${usd(inv(A))}</b><span>Compra sugerida</span><br>${k(inv(A), inv(B))}</div>
+    <div><b>${usd(caja60(A))}</b><span>Caja comprometida, 60 días</span><br>${k(caja60(A), caja60(B))}</div>`;
+}
+
+function renderProvTabla(){
+  $('#tProv').innerHTML = `<tr><th>Proveedor</th><th class="num">Días de entrega</th><th class="num">Variación ±días</th><th class="num">Flete $/m³</th><th class="num">Arancel %</th><th class="num">Aduana $/orden</th><th>Pago</th></tr>` +
+    DATA.proveedores.map(p => `<tr><td><b>${esc(p.origen)}</b><br><span class="tag">${esc(p.nombre)}</span></td>
+      <td class="num"><input class="cell" type="number" min="1" data-p="${p.id}" data-c="lt" value="${p.lt}" aria-label="Días de entrega ${esc(p.origen)}"></td>
+      <td class="num"><input class="cell" type="number" min="0" data-p="${p.id}" data-c="ltSd" value="${p.ltSd}" aria-label="Variación ${esc(p.origen)}"></td>
+      <td class="num"><input class="cell" type="number" min="0" data-p="${p.id}" data-c="fleteM3" value="${p.fleteM3}" aria-label="Flete ${esc(p.origen)}"></td>
+      <td class="num"><input class="cell" type="number" min="0" step="0.5" data-p="${p.id}" data-c="arancel" data-pct="1" value="${(p.arancel * 100).toFixed(1)}" aria-label="Arancel ${esc(p.origen)}"></td>
+      <td class="num"><input class="cell" type="number" min="0" data-p="${p.id}" data-c="brokerPO" value="${p.brokerPO}" aria-label="Aduana ${esc(p.origen)}"></td>
+      <td>${esc(p.terminos)}</td></tr>`).join('');
+}
+
+/* ---------- Ficha del producto ---------- */
+let abortAI = null;
+function abrirSku(sku){
+  const r = PLAN.filas.find(x => x.k.sku === sku); if (!r) return;
+  const c = r.costo;
+  $('#dBody').innerHTML = `<h2 id="dTitle">${esc(r.k.nombre)}</h2>
+    <p class="lead" style="margin:6px 0 14px"><span class="tag">${r.k.sku}</span> <span class="tag">${r.k.linea}</span> <span class="tag">Clase ${r.k._abc}${r.k._xyz}</span> <span class="st ${r.estado}">${ESTADO[r.estado]}</span></p>
+    <div class="kv">
+      <div><b>${n0(r.pos)}</b><span>Posición neta (u)</span></div>
+      <div><b>${n0(r.cobertura)} d</b><span>Cobertura</span></div>
+      <div><b>${Math.round(r.lt)} d</b><span>Llegada desde ${r.pv.origen}</span></div>
+      <div><b>${n0(r.rop)}</b><span>Punto de reorden</span></div>
+      <div><b>${r.qty ? n0(r.qty) : '—'}</b><span>Compra sugerida</span></div>
+      <div><b>$${c.unit.toFixed(2)}</b><span>Costo puesto / u</span></div>
+    </div>
+    <h3 style="margin:20px 0 6px">Por qué lo sugerimos</h3>
+    <ul class="reasons">${explicar(r).map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+    <div class="ask" style="margin-top:12px" id="aiRow"><button class="btn primary" id="aiBtn">Explicar con IA para el comprador</button><button class="btn hide" id="aiStop">Detener</button></div>
+    <div class="ai" id="aiOut" style="margin-top:10px"></div>
+    <h3 style="margin:20px 0 6px">Pronóstico de ventas</h3><div class="chartbox sm"><canvas id="dDem"></canvas></div>
+    <h3 style="margin:20px 0 6px">Inventario proyectado</h3><div class="chartbox sm"><canvas id="dInv"></canvas></div>`;
+  $('#drawer').classList.add('on'); $('#drawer').setAttribute('aria-hidden', 'false');
+  dibujarSku(sku, 'dDem', 'dInv');
+  if (!sample) $('#aiRow').classList.add('hide');
+  $('#aiBtn')?.addEventListener('click', () => preguntarIA(promptSku(r), $('#aiOut'), $('#aiBtn'), $('#aiStop'), 'default'));
+  $('.panel .x').focus();
+}
+function cerrar(){ abortAI?.abort(); $('#drawer').classList.remove('on'); $('#drawer').setAttribute('aria-hidden', 'true'); }
+
+function datoSku(r){ return { sku:r.k.sku, producto:r.k.nombre, estado:ESTADO[r.estado], clase:r.k._abc + r.k._xyz, proveedor:r.pv.origen, dias_entrega:Math.round(r.lt),
+  venta_mes:Math.round(r.d * 30.4), en_almacen:r.k.onhand, en_transito:r.k.onorder, cobertura_dias:isFinite(r.cobertura) ? Math.round(r.cobertura) : null,
+  stock_seguridad:Math.round(r.ss), punto_reorden:Math.round(r.rop), compra_sugerida:r.qty, costo_unitario_puesto:+r.costo.unit.toFixed(2), costo_fob:r.costo.fob,
+  total_compra:Math.round(r.costo.total || 0), venta_en_riesgo:Math.round(r.ventaRiesgo), proveedor_alterno:r.k.alterno, terminos_pago:r.pv.terminos }; }
+function promptSku(r){
+  return `Eres QORTEX, el analista de compras de Quamtex (distribuidor de pinturas en Houston). Explica al gerente de compras, en español claro y en máximo 6 viñetas cortas, por qué se recomienda esta compra, qué riesgo hay si no se hace y una acción concreta para hoy. Usa SOLO estos datos; no inventes cifras. Si algo falta, dilo.
+Datos: ${JSON.stringify(datoSku(r))}
+Razonamiento del motor: ${JSON.stringify(explicar(r))}`;
+}
+function promptGeneral(q){
+  const F = PLAN.filas;
+  const ctx = { fecha: HOY.toISOString().slice(0,10),
+    productos: F.filter(r => r.estado !== 'ok').slice(0, 30).map(datoSku),
+    ordenes: PLAN.ordenes.map(o => ({ proveedor:o.pv.origen, total:Math.round(o.total), fob:Math.round(o.fobT), llegada:o.llegada.toISOString().slice(0,10), terminos:o.pv.terminos, contenedor_llenado: o.llenado ? Math.round(o.llenado * 100) + '%' : 'terrestre',
+      pagos:o.pagos.map(p => ({ fecha:p.fecha.toISOString().slice(0,10), monto:Math.round(p.monto) })) })),
+    clientes: { recompra_90d: Math.round(CLI.recompra * 100) + '%', activos: CLI.activos, atrasados: CLI.enRiesgo.length, nuevos_proyectados_6m: Math.round(sum(CLI.nuevosProy)) },
+    supuestos_simulador: P };
+  return `Eres QORTEX, el analista de compras e inventario de Quamtex (distribuidor de pinturas en Houston). Responde la pregunta del gerente en español, directo y en máximo 8 líneas o una tabla corta. Usa SOLO los datos JSON; no inventes cifras ni productos. Si la pregunta pide priorizar con presupuesto, ordena por: primero productos que se agotan y son sensibles, luego venta en riesgo, luego margen.
+Datos: ${JSON.stringify(ctx)}
+Pregunta: ${q}`;
+}
+async function preguntarIA(prompt, out, btn, stop, tier){
+  if (!sample) return;
+  abortAI?.abort(); abortAI = new AbortController();
+  out.textContent = 'Pensando…'; btn.disabled = true; stop.classList.remove('hide');
+  stop.onclick = () => abortAI.abort();
+  try {
+    const res = await sample(prompt, { modelTier: tier, signal: abortAI.signal, onText: ({ text }) => { out.textContent = text; } });
+    out.textContent = res.text;
+  } catch (e) {
+    if (e?.code === 'not_granted'){ out.textContent = 'La IA no está habilitada en esta vista. El análisis del motor sigue disponible arriba.'; }
+    else if (e?.code === 'cancelled'){ out.textContent = (e.text || out.textContent.replace('Pensando…','')) + (e.text ? '' : 'Consulta detenida.'); }
+    else if (e?.code === 'rate_limited'){ out.textContent = 'Hay muchas consultas en curso. Intente de nuevo en un minuto.'; }
+    else { out.textContent = (e?.text ? e.text + '\n\n' : '') + 'No se pudo completar la respuesta: ' + (e?.message || 'error desconocido') + '.'; }
+  } finally { btn.disabled = false; stop.classList.add('hide'); }
+}
+
+/* ---------- Eventos ---------- */
+document.querySelectorAll('nav.tabs button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('nav.tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
+  document.querySelectorAll('section.pane').forEach(s => s.classList.toggle('on', s.id === b.dataset.t));
+  Object.values(charts).forEach(c => c.resize());
+}));
+document.addEventListener('click', e => {
+  const s = e.target.closest('[data-sku]'); if (s) abrirSku(s.dataset.sku);
+  const f = e.target.closest('[data-f]'); if (f){ filtro = f.dataset.f; renderInventario(); }
+  if (e.target.closest('[data-close]')) cerrar();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') cerrar();
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-sku]')){ e.preventDefault(); abrirSku(e.target.dataset.sku); }
+});
+document.addEventListener('input', e => {
+  if (e.target.id === 'buscar'){ busqueda = e.target.value; renderInventario(); const b = $('#buscar'); b.focus(); b.setSelectionRange(busqueda.length, busqueda.length); }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.matches('input.cell')){
+    const p = DATA.proveedores.find(x => x.id === t.dataset.p), v = parseFloat(t.value);
+    if (p && isFinite(v) && v >= 0){ p[t.dataset.c] = t.dataset.pct ? v / 100 : v; recalcular(); }
+  }
+  if (t.id === 'selSku') dibujarSku(t.value, 'chDem', 'chInvP');
+});
+const sliders = [['sDem','oDem','demanda',v => (v > 0 ? '+' : '') + v + '%'],['sRet','oRet','retrasoCN',v => v + ' sem'],['sAr','oAr','arancelCN',v => '+' + v + '%'],['sSv','oSv','servicio',v => '+' + v + ' pts'],['sTasa','oTasa','tasa',v => v + '%']];
+sliders.forEach(([s, o, k, fmt]) => $('#' + s).addEventListener('input', e => {
+  const v = parseFloat(e.target.value); $('#' + o).textContent = fmt(v); P[k] = k === 'tasa' ? v / 100 : v; recalcular();
+}));
+$('#simReset').addEventListener('click', () => { P = { ...BASE }; sliders.forEach(([s, o, k, fmt]) => { const v = k === 'tasa' ? BASE.tasa * 100 : BASE[k]; $('#' + s).value = v; $('#' + o).textContent = fmt(v); }); recalcular(); });
+$('#carga').addEventListener('change', async e => {
+  const file = e.target.files[0]; if (!file) return;
+  try {
+    DATA = cargarJSON(JSON.parse(await file.text()));
+    DATA.fuente = 'netsuite';
+    $('#fuente').textContent = 'Datos de NetSuite · ' + file.name; $('#fuente').classList.add('live');
+    iniciar();
+  } catch (err) { alert('No se pudo leer el archivo: ' + err.message); }
+  e.target.value = '';
+});
+$('#askBtn').addEventListener('click', () => { const q = $('#askQ').value.trim(); if (q) preguntarIA(promptGeneral(q), $('#askOut'), $('#askBtn'), $('#askStop'), 'default'); });
+$('#askQ').addEventListener('keydown', e => { if (e.key === 'Enter') $('#askBtn').click(); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => render());
+
+function iniciar(){
+  BASEPLAN = planificar(DATA, { ...BASE });
+  CLI = metricasClientes(DATA);
+  recalcular();
+}
+iniciar();
+$('#askCard').classList.add('hide');
+(async () => {
+  try { sample = window.claude ? await window.claude.use('sample') : null; } catch { sample = null; }
+  if (sample) $('#askCard').classList.remove('hide');
+})();
+</script>
+</body>
+</html>

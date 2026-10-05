@@ -24,7 +24,7 @@ el archivo real antes de cambiar nada.
 
 | Tarea | Estado | Commits |
 |---|---|---|
-| 1 · Importar activos tal cual | **bloqueada**: B1, faltan los archivos | |
+| 1 · Importar activos tal cual | **parcial**: dashboard importado del artifact (sin secretos, sin llamadas a NetSuite); faltan conector y queries | este commit |
 | 2 · Candado de solo lectura | pendiente | |
 | 3 · Queries SuiteQL como archivos | pendiente | |
 | 4 · Esquema de `qortex_data.json` | pendiente | |
