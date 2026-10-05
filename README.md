@@ -75,6 +75,10 @@ Lo que no esté en la tabla entra como **solicitud de cambio, con precio y fecha
 | Ruta | Qué es | Versionado |
 |---|---|---|
 | `README.md` | Esta acta | sí |
+| `CLAUDE.md` | Reglas para Claude y flujo de trabajo | sí |
+| `docs/PROJECT_STATE.md` | Estado vigente y bloqueos | sí |
+| `docs/superpowers/specs/` · `plans/` | Diseño y planes de implementación | sí |
+| `docs/adrs/` · `docs/DECISION_LOG.md` | Decisiones | sí |
 | `SEGUIMIENTO.md` | Tablero comercial y pendientes | sí |
 | `.env.example` | 6 variables como referencias `op://` | sí |
 | `index.html` | Dashboard v0.1 (6 pestañas + simulador) | **pendiente de subir** |

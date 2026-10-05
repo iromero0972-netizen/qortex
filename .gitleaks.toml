@@ -1,0 +1,8 @@
+title = "QORTEX gitleaks"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Referencias op:// a 1Password: son punteros, nunca el valor"
+regexes = ['''op://[A-Za-z0-9 _\-]+/[A-Za-z0-9 _\-/]+''']
