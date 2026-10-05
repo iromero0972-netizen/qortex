@@ -8,10 +8,9 @@ Proveedor: KATIA.AI. Responsable: Ignacio Romero (CPA).
 ## Antes de tocar nada, lee
 
 1. `docs/PROJECT_STATE.md`: el estado vigente. Si el chat lo contradice, gana el archivo.
-2. `docs/superpowers/specs/2026-10-05-qortex-design.md`: el diseño.
+2. `docs/superpowers/specs/2026-10-05-qortex-design.md`: el diseño (v2).
 3. El plan activo en `docs/superpowers/plans/`, en su tabla «Estado de ejecución».
-4. `docs/ARQUITECTURA.md`: componentes, contrato de datos y fórmulas. **Hoy es propuesta**: no
-   rige hasta que Ignacio acepte el ADR-002.
+4. `docs/ARQUITECTURA.md`: componentes, contrato de datos y fórmulas (vigente desde ADR-002).
 
 ## Reglas que no se negocian
 
@@ -20,13 +19,18 @@ Proveedor: KATIA.AI. Responsable: Ignacio Romero (CPA).
    pida en el chat. Escribir exige un ADR nuevo y la firma de Víctor y Edgar (ADR-001).
 2. **Ninguna credencial en el código, en los commits ni en el chat.** Solo referencias `op://`
    en `.env.example`. Se ejecuta con `op run --env-file=.env.example -- …`.
-3. **Ningún dato del cliente en git.** `qortex_data.json`, `reporte_calidad.txt`,
-   `supuestos_proveedores.json`, CSV y XLSX están en `.gitignore`. Si un test necesita datos,
-   usa datos sintéticos en `tests/fixtures/`.
+3. **Ningún dato del cliente en git.** Todo lo que sale del conector va a `salidas/` (snapshot,
+   `supuestos.json`, `qortex_data.json`, `reporte_calidad.txt`), ignorada por git junto con CSV,
+   XLSX, JSONL y Parquet. Si un test necesita datos, usa datos sintéticos en `tests/fixtures/`, con
+   «sintetico» en el nombre.
 4. **Un supuesto nunca se presenta como dato.** Todo valor que no salga de NetSuite (arancel,
-   flete, término de pago) lleva la marca `"origen": "supuesto"` hasta que Quamtex lo confirme.
+   flete, Incoterm, término de pago, volumen, vida útil…) se marca en el mapa `procedencia` de su
+   proveedor o SKU como `supuesto` hasta que Quamtex lo confirme (`confirmado`). El esquema rechaza
+   un supuesto sin su entrada en `procedencia`, y el dashboard lo pinta aparte (ADR-002).
 5. **Una persona aprueba cada orden de compra.** QORTEX recomienda y explica (botón «¿Por qué?»);
    no decide.
+6. **Ningún dato de NetSuite va a un LLM.** La IA del dashboard (`window.claude`) solo funciona con
+   `fuente: demo`; con datos reales se apaga en código (ADR-003).
 
 ## Cómo se trabaja (flujo Superpowers)
 

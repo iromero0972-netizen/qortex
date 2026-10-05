@@ -18,11 +18,13 @@ fecha: 2026-10-05
 ## Pendientes
 
 - [ ] Publicar el dashboard en Vercel (`qortex-quamtex`) y validarlo en incógnito
-- [ ] Confirmar los precios de la Fase 0, la Fase 1 y el retainer
+- [x] Precio de la Fase 0: $2,500 (5-oct)
+- [ ] Confirmar los precios de la Fase 1 y el retainer
 - [ ] Llenar los placeholders `[$__]` y `[__]` de ambos decks
 - [ ] Agendar la reunión a solas con Víctor (45 min)
 - [ ] Conseguir una línea escrita de Víctor que autorice el frente de compras
-- [ ] Subir a este repositorio el dashboard, el conector y las 5 queries SuiteQL
+- [x] Subir el dashboard (`e623751`)
+- [ ] Subir el conector y las 5 queries SuiteQL (B1)
 - [ ] Guardar las 6 credenciales de NetSuite en 1Password (`Quamtex-REA`)
 - [ ] Correr el conector contra NetSuite real (2 corridas)
 - [ ] Confirmar si existe Landed Cost en NetSuite
@@ -43,3 +45,4 @@ fecha: 2026-10-05
 | 2026-10-05 | Kit de proyecto: CLAUDE.md, PROJECT_STATE, DECISION_LOG, índice de ADR, spec, plan Fase 0 y CI | segundo commit |
 | 2026-10-05 | Dashboard importado del artifact; decisión: IA solo con datos demo | `e623751`, `ba46970` |
 | 2026-10-05 | Revisión multiagente: 64 proyectos comprobados, 48 hallazgos; arquitectura propuesta | `docs/ARQUITECTURA.md`, `docs/REVISION-2026-10-05.md` |
+| 2026-10-05 | Ignacio acepta las 10 decisiones; ADR-002 a ADR-005, spec v2 y plan v2 | este commit |

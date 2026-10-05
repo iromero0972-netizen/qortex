@@ -29,7 +29,11 @@ viejo solo cambia la línea de estado.
 | ADR | Título | Estado | Fecha |
 |---|---|---|---|
 | [ADR-001](ADR-001-expediente-separado-solo-lectura.md) | Expediente separado y de solo lectura sobre NetSuite | Aceptado | 2026-10-05 |
+| [ADR-002](ADR-002-motor-unico-y-contrato.md) | Un solo motor de políticas, y `qortex_data.json` como su entrada validada | Aceptado | 2026-10-05 |
+| [ADR-003](ADR-003-ia-solo-con-datos-demo.md) | La IA del dashboard solo funciona con datos de demostración | Aceptado | 2026-10-05 |
+| [ADR-004](ADR-004-candado-lista-blanca.md) | Candado de solo lectura con lista blanca, en código | Aceptado | 2026-10-05 |
+| [ADR-005](ADR-005-publicacion-y-build.md) | Se publica solo un HTML de demo, de un archivo y protegido | Aceptado | 2026-10-05 |
 
-> ## **PRÓXIMO ADR LIBRE: ADR-002**
+> ## **PRÓXIMO ADR LIBRE: ADR-006**
 >
 > Quien crea un ADR actualiza esta línea en el mismo commit.

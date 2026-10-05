@@ -51,7 +51,7 @@ no coincide con el físico (conteo de KATIA: **−961 u netas en 36 SKUs**). Com
 | Incluye | No incluye |
 |---|---|
 | Lectura de NetSuite vía SuiteQL/REST (OAuth1 TBA) | Escribir OC, ajustes o registros en NetSuite |
-| Inventario, 24 meses de ventas, OC y recepciones | Contabilidad, cuentas por cobrar y por pagar |
+| Inventario, ventas (toda la historia, hasta 60 meses), OC y recepciones | Contabilidad, cuentas por cobrar y por pagar |
 | Pronóstico, ABC/XYZ, stock de seguridad, ROP, EOQ | WMS y picking |
 | Costo puesto en almacén por proveedor y origen | Negociación con proveedores |
 | Dashboard HTML con simulador «¿y si…?» | App móvil nativa |
@@ -60,11 +60,14 @@ no coincide con el físico (conteo de KATIA: **−961 u netas en 36 SKUs**). Com
 
 Lo que no esté en la tabla entra como **solicitud de cambio, con precio y fecha**.
 
-## Fases y precio (sugerido, por confirmar)
+## Fases y precio
+
+Fase 0 confirmada en $2,500 (decisión 4 de `docs/REVISION-2026-10-05.md`). El resto, sugerido.
+Propiedad: KATIA conserva el código; Quamtex recibe una licencia de uso perpetua (decisión 10).
 
 | Fase | Duración | Precio (USD) | Definition of Done |
 |---|---|---|---|
-| 0 — Diagnóstico | 2 sem | 1,500–2,500 (100% por adelantado) | `qortex_data.json` real cargado, reporte de calidad entregado y revisado con Víctor |
+| 0 — Diagnóstico | 2 sem | **2,500** (100% por adelantado) | `qortex_data.json` real cargado, reporte de calidad con líneas base entregado y revisado con Víctor, con su confirmación escrita |
 | Quick Win | 2–3 sem (dentro de la Fase 1) | incluido | Compras emite una OC real basada en QORTEX |
 | 1 — Motor completo | 6–8 sem | 7,000–12,000 (50/50) | 100% de las OC con recomendación y costo puesto en almacén validado |
 | 2 — Propone y aprueba | por definir | se cotiza al cerrar la Fase 1 | autorización escrita de ambos dueños |
@@ -81,26 +84,27 @@ Lo que no esté en la tabla entra como **solicitud de cambio, con precio y fecha
 | `docs/adrs/` · `docs/DECISION_LOG.md` | Decisiones | sí |
 | `SEGUIMIENTO.md` | Tablero comercial y pendientes | sí |
 | `.env.example` | 6 variables como referencias `op://` | sí |
-| `index.html` | Dashboard v0.1 (6 pestañas + simulador) | **pendiente de subir** |
-| `qortex_conector.py` | Conector NetSuite de solo lectura | **pendiente de subir** |
-| `queries/*.sql` | 5 consultas SuiteQL | **pendiente de subir** |
-| `qortex_data.json`, `reporte_calidad.txt`, `supuestos_proveedores.json` | Datos del cliente | **nunca** (`.gitignore`) |
+| `docs/ARQUITECTURA.md` · `docs/REFERENCIAS.md` | Arquitectura e ingeniería; 64 proyectos comparables | sí |
+| `index.html` | Dashboard v0.1 (6 pestañas + simulador); pasa a `dashboard/` en el plan T1b | sí (`e623751`) |
+| `src/qortex/conector.py`, `src/qortex/queries/*.sql` | Conector NetSuite de solo lectura y consultas | **pendiente de subir** (B1) |
+| `salidas/` | Snapshot, supuestos, `qortex_data.json`, reporte de calidad: datos del cliente | **nunca** (`.gitignore`) |
 
 ## Secuencia de carga de datos
 
-1. Primera corrida del conector: genera `supuestos_proveedores.json`.
-2. Quamtex asigna origen, términos de pago, arancel y quién paga el flete de cada proveedor.
-3. Segunda corrida: genera `qortex_data.json` y `reporte_calidad.txt`.
-4. En el dashboard, botón «Cargar datos de NetSuite».
+1. `make extraer`: el conector lee NetSuite (solo lectura) y deja el snapshot y `salidas/supuestos.json`, con valores por origen marcados como supuesto.
+2. Compras confirma origen, Incoterm, términos de pago, arancel y flete de cada proveedor.
+3. `make datos` y `make calidad` (sin red): generan `salidas/qortex_data.json` y `salidas/reporte_calidad.txt`.
+4. En `build/qortex.html` abierto en local, botón «Cargar datos de NetSuite».
 
 ```bash
-op run --env-file=.env.example -- python3 qortex_conector.py
+make fase0   # = op run --env-file=.env.example -- uv run qortex extraer, y después datos y calidad
 ```
 
 ## Seguridad
 
 - Las credenciales salen solo de 1Password (bóveda `Quamtex-REA`). Nunca van en el código ni en el chat.
-- El dashboard se publica con `noindex, nofollow`. Hay que comprobar en una ventana de incógnito si pide login.
+- Se publica solo `build/` con datos demo, `noindex` y contraseña de Vercel (`make publicar`, ADR-005); se comprueba en incógnito.
+- La IA del dashboard no recibe datos reales (ADR-003).
 - Ningún dato del cliente entra en git.
 
 ## Riesgos (alternativa recomendada)
@@ -109,7 +113,7 @@ op run --env-file=.env.example -- python3 qortex_conector.py
 |---|---|
 | Inventario poco fiable (−961 u) | Recontar solo los SKUs clase A antes de proyectar |
 | Edgar frena la decisión | Que Víctor presente la lámina «sin riesgo». Respaldo: piloto con 1 proveedor |
-| Vercel bloqueado | Correr `npx vercel --prod` desde la computadora. Si la reunión es antes, mandar el HTML como archivo |
+| Vercel bloqueado | `make publicar` desde la terminal de Ignacio. Si la reunión es antes, mandar el HTML como archivo |
 | Credenciales de NetSuite sin permisos | Crear con Víctor un rol nuevo de solo lectura (no reusar el del Tomador) |
 | Sin datos de aranceles y flete | Usar supuestos por origen, marcados como tales, y pedir facturas en la Fase 1 |
 | El alcance crece | Solicitud de cambio con precio |

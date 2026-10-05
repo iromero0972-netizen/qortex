@@ -1,14 +1,14 @@
 ---
 tipo: registro
 id: ARQUITECTURA
-estado: PROPUESTO
+estado: APROBADO
 version: 1.0
 fecha: 2026-10-05
 ---
 
 # QORTEX — Arquitectura
 
-> **Propuesta pendiente de revisión de Ignacio.** Cambia una decisión registrada (spec D4, `docs/superpowers/specs/2026-10-05-qortex-design.md:27`; `docs/DECISION_LOG.md:18`, «Python para conector y motor») y el mecanismo de dos reglas que no se negocian (`CLAUDE.md:21-25`). No rige hasta que Ignacio acepte el ADR-002 y el texto nuevo de esas reglas (§16).
+> **Aprobada por Ignacio el 5-oct-2026** (acepta las 10 decisiones de `docs/REVISION-2026-10-05.md` §5). Se ejecuta con los ADR-002 a ADR-005, el spec v2 y el plan de la Fase 0 v2. Las citas `fichero:línea` apuntan al commit `ba46970`, antes de esos cambios.
 
 **Cómo leer las citas.** `fichero:línea` se refiere al commit `ba46970`. `spec` = `docs/superpowers/specs/2026-10-05-qortex-design.md`; `plan` = `docs/superpowers/plans/2026-10-05-fase0-diagnostico.md`. Los ids `formulas-N`, `contrato-datos-N`, `seguridad-N`, `ingenieria-N`, `plan-vs-dod-N` y `coherencia-docs-N` son hallazgos de la revisión técnica del 2026-10-05, con su evidencia en `docs/REVISION-2026-10-05.md`. «Verificado con node» = reproducido con el motor extraído de `index.html:247-558` y node v22.22.0, fuera del repo. «Verificado con uv» y «verificado con Ajv» = comprobado en un directorio temporal con uv 0.8.17 y Ajv 8.20.0. «Supuesto» o «sin verificar» = no comprobado. Las horas son estimaciones del arquitecto (supuesto). Las URL de proyectos externos van en el texto y en §12; la lista completa está en `docs/REFERENCIAS.md`.
 
